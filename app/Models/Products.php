@@ -20,4 +20,26 @@ class Products extends Model
                     ->withPivot('quantity')
                     ->withTimestamps();
     }
+
+    public function stocks()
+    {
+        return $this->hasMany(Stock::class);
+    }
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
+    public function getSalesCountAttribute()
+    {
+        return $this->sales()->count();
+    }
+    public function transfers()
+    {
+        return $this->hasMany(Transfer::class);
+    }
+    public function getTransfersCountAttribute()
+    {
+        return $this->transfers()->count();
+    }
 }

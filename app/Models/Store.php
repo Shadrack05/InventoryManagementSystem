@@ -29,4 +29,17 @@ class Store extends Model
                     ->withTimestamps();
     }
 
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
+    public function getSalesCountAttribute()
+    {
+        return $this->sales()->count();
+    }
+    public function transfers()
+    {
+        return $this->hasMany(Transfer::class, 'from_store_id');
+    }
+
 }

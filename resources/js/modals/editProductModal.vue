@@ -1,6 +1,9 @@
 <template>
     <transition
     name="fade"
+    @before-enter="beforeEnter"
+    @enter="enter"
+    @leave="leave"
   >
     <div
     v-if="editVisible"
@@ -9,6 +12,9 @@
     <!-- Modal -->
     <transition
     name="fade"
+    @before-enter="beforeEnter"
+    @enter="enter"
+    @leave="leave"
   >
     <div
       v-if="editVisible"
@@ -45,42 +51,51 @@
         <p
           class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
         >
-          Edit Store
+          Edit Product
         </p>
         <!-- Modal description -->
         <label class="block text-sm">
           <span class="text-gray-700 dark:text-gray-400">Name</span>
           <input
             class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-            placeholder="Store Name"
-            v-model="store.name"
+            placeholder="transformers"
+            v-model="product.name"
           />
         </label>
 
-        <label class="block mt-4 text-sm mb-3">
-            <span class="text-gray-700 dark:text-gray-400">
-              Branch
-            </span>
-            <select
-              class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
-              v-model="branchId"
-            >
-            <option disabled value="">Branch Name</option>
-              <option
-              v-for="option in branches" :value="option.id" :key="option.id"
-              >{{ option.name }}</option>
-            </select>
-          </label>
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Description</span>
+          <textarea
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="youth product"
+            v-model="product.sku"
+          />
+        </label>
+
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Description</span>
+          <textarea
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="youth product"
+            v-model="product.description"
+          />
+        </label>
 
       </div>
       <footer
         class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800"
       >
+        <!-- <button
+          @click="closeModal"
+          class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+        >
+          Close
+        </button> -->
         <button
           class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-          @click="updateStore"
+          @click="updateProduct"
         >
-          Edit Store
+          Edit Product
         </button>
       </footer>
     </div>
@@ -97,33 +112,19 @@ import { useCounterStore } from '../store';
 
 export default {
     props: {
-        editVisible: {
-            type: Boolean,
-            default: false
-        },
-        storeData: {
-            type: Object,
-            required: true
-        }
+    editVisible: {
+      type: Boolean,
+      default: false
+    },
+    productData: {
+      type: Object,
+      required: true
+    }
     },
     data() {
         return {
-            store: { ...this.storeData },
+            product: { ...this.productData },
         };
-    },
-    computed: {
-        ...mapState(useCounterStore, ['branches']),
-        branchId: {
-            get() {
-                return this.store.branch ? this.store.branch.id : null;
-            },
-            set(value) {
-                if (!this.store.branch) {
-                    this.store.branch = {};
-                }
-                this.store.branch.id = value;
-            }
-        }
     },
     mounted () {
         //
@@ -132,24 +133,24 @@ export default {
         //
     },
     watch: {
-        storeData: {
-            handler(newStore) {
-            this.store = { ...newStore };
+        productData: {
+            handler(newProduct) {
+            this.product = { ...newProduct };
             },
             deep: true,
             immediate: true
         }
     },
     methods: {
-        ...mapActions(useCounterStore, ['editStore']),
+        ...mapActions(useCounterStore, ['editProduct']),
 
     closeModal() {
       this.$emit('closeEdit');
     },
-    async updateStore() {
+    async updateProduct() {
         Swal.fire({
         title: "Are you sure?",
-        text: "Do you want to edit store",
+        text: "Do you want to edit product",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -157,13 +158,11 @@ export default {
         confirmButtonText: "Yes, update it!"
         }).then((result) => {
         if (result.isConfirmed) {
-            let storeId = this.store.id;
-            this.store.branch_id = this.branchId;
-
+            let productId = this.product.id;
             try {
-                this.editStore(storeId, this.store);
+                this.editProduct(productId, this.product);
             } catch (error) {
-                console.error('Error editing store', error);
+                console.error('Error editing product', error);
             } finally {
                 this.$emit('edit');
                 this.closeModal();
@@ -171,8 +170,31 @@ export default {
         }
         });
     },
-
-
+    beforeLeave(el) {
+        el.style.opacity = 1;
+    },
+    leave(el, done) {
+        el.style.transition = 'opacity 150ms ease-in-out';
+        el.style.opacity = 0;
+    done();
+    },
+    closeNotificationsMenu() {
+        this.isNotificationsMenuOpen = false;
+    },
+    beforeEnter(el) {
+        el.style.opacity = 0;
+        el.style.transform = 'translateX(-20px)';
+    },
+    enter(el, done) {
+         el.offsetHeight; // Trigger reflow to apply transition
+        el.style.transition = 'opacity 150ms ease-in-out, transform 150ms ease-in-out';
+        el.style.opacity = 1;
+        el.style.transform = 'translateX(0)';
+            done();
+    },
+        focusTrap(element) {
+          // Implement your focusTrap logic here or use a library like tabbable or focus-trap
+        },
   },
   directives: {
     'click-outside': {

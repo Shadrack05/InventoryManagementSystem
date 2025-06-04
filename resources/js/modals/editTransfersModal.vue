@@ -45,32 +45,63 @@
         <p
           class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
         >
-          Edit Store
+          Edit Stock Transfer
         </p>
         <!-- Modal description -->
-        <label class="block text-sm">
-          <span class="text-gray-700 dark:text-gray-400">Name</span>
-          <input
-            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-            placeholder="Store Name"
-            v-model="store.name"
-          />
-        </label>
-
         <label class="block mt-4 text-sm mb-3">
             <span class="text-gray-700 dark:text-gray-400">
-              Branch
+              Product
             </span>
             <select
               class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
-              v-model="branchId"
+              v-model="productId"
             >
-            <option disabled value="">Branch Name</option>
+            <option disabled value="">Product</option>
               <option
-              v-for="option in branches" :value="option.id" :key="option.id"
-              >{{ option.name }}</option>
+              v-for="option in products" :value="option.id" :key="option.id"
+              >{{ option.name }} - {{ option.sku }}</option>
             </select>
           </label>
+
+        <label class="block mt-4 text-sm mb-3">
+            <span class="text-gray-700 dark:text-gray-400">
+              From Store
+            </span>
+            <select
+              class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
+              v-model="fromStoreId"
+            >
+            <option disabled value="">Store</option>
+              <option
+              v-for="option in stores" :value="option.id" :key="option.id"
+              >{{ option.name }} - {{ option.branch?.name || 'NA'}}</option>
+            </select>
+          </label>
+
+        <label class="block mt-4 text-sm mb-3">
+            <span class="text-gray-700 dark:text-gray-400">
+              To Store
+            </span>
+            <select
+              class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
+              v-model="toStoreId"
+            >
+            <option disabled value="">Store</option>
+              <option
+              v-for="option in stores" :value="option.id" :key="option.id"
+              >{{ option.name }} - {{ option.branch?.name || 'NA'}}</option>
+            </select>
+          </label>
+
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Quantity</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="quantity"
+            type="number"
+            v-model="transfer.quantity"
+          />
+        </label>
 
       </div>
       <footer
@@ -78,9 +109,9 @@
       >
         <button
           class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-          @click="updateStore"
+          @click="updateTransfer"
         >
-          Edit Store
+          Edit Transfer
         </button>
       </footer>
     </div>
@@ -97,31 +128,44 @@ import { useCounterStore } from '../store';
 
 export default {
     props: {
-        editVisible: {
-            type: Boolean,
-            default: false
-        },
-        storeData: {
-            type: Object,
-            required: true
-        }
+    editVisible: {
+      type: Boolean,
+      default: false
+    },
+    transferData: {
+      type: Object,
+      required: true
+    }
     },
     data() {
         return {
-            store: { ...this.storeData },
+            transfer: { ...this.transferData },
         };
     },
     computed: {
-        ...mapState(useCounterStore, ['branches']),
-        branchId: {
+        ...mapState(useCounterStore, ['products', 'stores']),
+        productId: {
             get() {
-                return this.store.branch ? this.store.branch.id : null;
+                return this.transfer.product_id;
             },
             set(value) {
-                if (!this.store.branch) {
-                    this.store.branch = {};
-                }
-                this.store.branch.id = value;
+                this.transfer.product_id = value;
+            }
+        },
+        fromStoreId: {
+            get() {
+                return this.transfer.from_store_id;
+            },
+            set(value) {
+                this.transfer.store_id = value;
+            }
+        },
+        toStoreId: {
+            get() {
+                return this.transfer.to_store_id;
+            },
+            set(value) {
+                this.transfer.to_store_id = value;
             }
         }
     },
@@ -132,24 +176,24 @@ export default {
         //
     },
     watch: {
-        storeData: {
-            handler(newStore) {
-            this.store = { ...newStore };
+        transferData: {
+            handler(newTransfer) {
+                this.transfer = { ...newTransfer };
             },
             deep: true,
             immediate: true
         }
     },
     methods: {
-        ...mapActions(useCounterStore, ['editStore']),
+        ...mapActions(useCounterStore, ['editTransfer']),
 
     closeModal() {
       this.$emit('closeEdit');
     },
-    async updateStore() {
+    async updateTransfer() {
         Swal.fire({
         title: "Are you sure?",
-        text: "Do you want to edit store",
+        text: "Do you want to edit transfer",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -157,13 +201,14 @@ export default {
         confirmButtonText: "Yes, update it!"
         }).then((result) => {
         if (result.isConfirmed) {
-            let storeId = this.store.id;
-            this.store.branch_id = this.branchId;
-
+            let transferId = this.transfer.id;
+            this.transfer.productId = this.productId;
+            this.transfer.fromStoreId = this.fromStoreId;
+            this.transfer.toStoreId = this.toStoreId;
             try {
-                this.editStore(storeId, this.store);
+                this.editTransfer(transferId, this.transfer);
             } catch (error) {
-                console.error('Error editing store', error);
+                console.error('Error editing transfer', error);
             } finally {
                 this.$emit('edit');
                 this.closeModal();

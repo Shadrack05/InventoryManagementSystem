@@ -38,32 +38,35 @@
         <p
           class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
         >
-          Create Store
+          Add Product
         </p>
         <!-- Modal description -->
         <label class="block text-sm">
           <span class="text-gray-700 dark:text-gray-400">Name</span>
           <input
             class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-            placeholder="Store Name"
+            placeholder="Apples"
             v-model="name"
           />
         </label>
 
-        <label class="block mt-4 text-sm mb-3">
-            <span class="text-gray-700 dark:text-gray-400">
-              Branch
-            </span>
-            <select
-              class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
-              v-model="branchId"
-            >
-            <option disabled value="">Branch Name</option>
-              <option
-              v-for="option in branches" :value="option.id" :key="option.id"
-              >{{ option.name }}</option>
-            </select>
-          </label>
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">SKU</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder=" SKU "
+            v-model="sku"
+          />
+        </label>
+
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Description</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Product..........."
+            v-model="description"
+          />
+        </label>
 
       </div>
       <footer
@@ -71,7 +74,7 @@
       >
         <button
           class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-          @click="createStore"
+          @click="createProduct"
         >
         <span v-if="isLoading">
             <svg class="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24">
@@ -79,7 +82,7 @@
               <path class="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8H4z"></path>
             </svg>
           </span>
-          <span v-else>Create Store</span>
+          <span v-else>Create Product</span>
         </button>
       </footer>
     </div>
@@ -90,7 +93,7 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import { useCounterStore } from '../store';
-import { mapActions, mapState } from 'pinia';
+import { mapActions } from 'pinia';
 
 
 export default {
@@ -104,48 +107,72 @@ export default {
     data() {
         return {
             name: '',
-            store: {},
+            description: '',
+            product: {},
             error: 'error',
             succcess: 'success',
             isLoading: false,
-            branchId: null,
+            sku: '',
         };
 
-    },
-    computed: {
-        // You can add computed properties here if needed
-        ...mapState(useCounterStore, ['branches']),
     },
     mounted () {
         //
     },
     methods: {
-        ...mapActions(useCounterStore, ['addStore']),
+        ...mapActions(useCounterStore, ['addProduct']),
 
     closeModal() {
       this.$emit('close');
     },
-    async createStore() {
+    async createProduct() {
         try {
             this.isLoading = true;
-            this.store.name = this.name;
-            this.store.branchId = this.branchId;
+            this.product.name = this.name;
+            this.product.sku = this.sku;
+            this.product.description = this.description;
 
-            await this.addStore(this.store);
+            await this.addProduct(this.product); // Assuming addProduct is an async action
 
             this.$emit('create');
             this.closeModal();
             this.resetForm();
         } catch (error) {
-            console.error('Error creating store:', error);
+            console.error('Error creating product:', error);
         } finally {
             this.isLoading = false;
         }
     },
     resetForm () {
         this.name = '';
-        this.branchId = null;
+        this.description = '';
+        this.sku = '';
     },
+    beforeLeave(el) {
+            el.style.opacity = 1;
+            },
+        leave(el, done) {
+            el.style.transition = 'opacity 150ms ease-in-out';
+            el.style.opacity = 0;
+            done();
+            },
+        closeNotificationsMenu() {
+            this.isNotificationsMenuOpen = false;
+            },
+        beforeEnter(el) {
+            el.style.opacity = 0;
+            el.style.transform = 'translateX(-20px)';
+            },
+        enter(el, done) {
+            el.offsetHeight; // Trigger reflow to apply transition
+            el.style.transition = 'opacity 150ms ease-in-out, transform 150ms ease-in-out';
+            el.style.opacity = 1;
+            el.style.transform = 'translateX(0)';
+            done();
+            },
+        focusTrap(element) {
+          // Implement your focusTrap logic here or use a library like tabbable or focus-trap
+        },
   },
   watch: {
   },

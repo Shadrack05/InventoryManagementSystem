@@ -4,14 +4,14 @@
             <p
             class="mt-2 mb-3 text-lg font-semibold text-gray-700 dark:text-gray-300"
           >
-           Stores
+           Inventory
           </p>
 
         <div class="flex items-center space-x-8 mt-2 mb-2">
             <button class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                @click="openCreatestore()"
+                @click="openCreateInventory()"
                 >
-                    + Add Store
+                    + Add Inventory
                 </button>
         </div>
 
@@ -20,9 +20,11 @@
               <tr
                 class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
               >
-                <th class="px-4 py-3">Id</th>
-                <th class="px-4 py-3">Name</th>
-                <th class="px-4 py-3">Parent Branch</th>
+                <th class="px-4 py-3">Product</th>
+                <th class="px-4 py-3">SKU</th>
+                <th class="px-4 py-3">Store</th>
+                <th class="px-4 py-3">Quantity</th>
+                <th class="px-4 py-3">Price</th>
                 <th class="px-4 py-3">Actions</th>
               </tr>
             </thead>
@@ -30,35 +32,32 @@
               class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
             >
               <tr class="text-gray-700 dark:text-gray-400"
-              v-for="store in stores" :key="store.id">
-              <td class="px-4 py-3">
-                <div class="flex items-center text-sm">
-                  <div>
-                    <p class="font-semibold"> {{ store.id }}</p>
-                  </div>
-                </div>
-              </td>
+              v-for="inventory in inventories" :key="inventory.id">
                 <td class="px-4 py-3">
                   <div class="flex items-center text-sm">
                     <div>
-                      <p class="font-semibold"> {{ store.name }}</p>
+                      <p class="font-semibold"> {{ inventory.product.name }}</p>
                     </div>
                   </div>
                 </td>
-                <td class="px-4 py-3">
-                  <div class="flex items-center text-sm">
-                    <div>
-                      <p class="font-semibold"> {{ store.branch?.name || 'NA'  }}</p>
-                    </div>
-                  </div>
+                <td class="px-4 py-3 text-sm">
+                    {{ inventory.product.sku }}
                 </td>
-
+                <td class="px-4 py-3 text-sm">
+                    {{ inventory.store.name }}
+                </td>
+                <td class="px-4 py-3 text-sm">
+                    {{ inventory.quantity }}
+                </td>
+                <td class="px-4 py-3 text-sm">
+                    {{ inventory.price }}
+                </td>
                 <td class="px-4 py-3">
                     <div class="flex items-center space-x-4 text-sm">
                       <button
                         class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                         aria-label="Edit"
-                        @click="openModal(store)"
+                        @click="openModal(inventory)"
                       >
                         <svg
                           class="w-5 h-5"
@@ -74,7 +73,7 @@
                       <button
                         class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                         aria-label="Delete"
-                        @click="deletestore(store)"
+                        @click="deleteInventory(inventory)"
                       >
                         <svg
                           class="w-5 h-5"
@@ -96,16 +95,16 @@
           </table>
     </div>
 </div>
-    <EditStoreModal
+    <EditInventoryModal
     :editVisible="editModal"
-    :storeData="selectedstore"
+    :inventoryData="selectedInventory"
     @closeEdit="closeModal()"
-    @edit="editstore()"
+    @edit="editInventory()"
     />
-    <CreateStoreModal
+    <CreateInventoryModal
     :isVisible="isModalOpen"
     @close="closeModal()"
-    @create="createstore()"
+    @create="createInventory()"
     />
 
 </template>
@@ -114,8 +113,8 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import { mapActions, mapState } from 'pinia';
-import CreateStoreModal from '../modals/createStoreModal.vue';
-import EditStoreModal from '../modals/editStoreModal.vue';
+import CreateInventoryModal from '../modals/createInventoryModal.vue';
+import EditInventoryModal from '../modals/editInventoryModal.vue';
 import { useCounterStore } from '../store.js';
 
 
@@ -124,36 +123,36 @@ export default {
     data() {
         return {
             isModalOpen: false,
-            selectedstore: {},
+            selectedInventory: {},
             editModal: false,
             alertMessage:'',
             alertType: ''
         };
     },
     mounted () {
-        // this.fetchStores();
+        // this.fetchInventorys();
     },
     components: {
-        CreateStoreModal,
-        EditStoreModal
+        CreateInventoryModal,
+        EditInventoryModal
     },
     computed: {
-        ...mapState(useCounterStore, ['stores', 'message', 'error']),
+        ...mapState(useCounterStore, ['inventories', 'message', 'error']),
     },
     methods: {
-        ...mapActions(useCounterStore, ['addStore','fetchStores', 'removeStore']),
+        ...mapActions(useCounterStore, ['addInventory','fetchInventories', 'removeInventory']),
 
-        openModal(store) {
-            this.selectedstore = { ...store };
+        openModal(inventory) {
+            this.selectedInventory = { ...inventory };
             this.editModal = true;
         },
-        openCreatestore() {
+        openCreateInventory() {
             this.isModalOpen = true;
         },
-        editstore () {
-            this.fetchStores();
+        editInventory () {
+            this.fetchInventories();
         },
-        async deletestore(store) {
+        async deleteInventory(inventory) {
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
@@ -164,18 +163,18 @@ export default {
                 confirmButtonText: "Yes, Delete it!"
                 }).then((result) => {
                 if (result.isConfirmed) {
-                    let storeId = store.id;
+                    let groupId = inventory.id;
                     try {
-                      this.removeStore(storeId);
-                      this.fetchStores();
+                      this.removeInventory(groupId);
+                      this.fetchInventories();
                     } catch (error) {
-                        console.error('error deleting store', error);
+                        console.error('error deleting inventory', error);
                     }
                 }
                 });
         },
-        createstore () {
-            this.fetchStores();
+        createInventory () {
+            this.fetchInventories();
         },
         closeModal() {
             this.isModalOpen = false;

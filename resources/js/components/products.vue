@@ -4,14 +4,14 @@
             <p
             class="mt-2 mb-3 text-lg font-semibold text-gray-700 dark:text-gray-300"
           >
-           Stores
+           Products
           </p>
 
         <div class="flex items-center space-x-8 mt-2 mb-2">
             <button class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                @click="openCreatestore()"
+                @click="openCreateProduct()"
                 >
-                    + Add Store
+                    + Add Product
                 </button>
         </div>
 
@@ -20,9 +20,9 @@
               <tr
                 class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
               >
-                <th class="px-4 py-3">Id</th>
                 <th class="px-4 py-3">Name</th>
-                <th class="px-4 py-3">Parent Branch</th>
+                <th class="px-4 py-3">SKU</th>
+                <th class="px-4 py-3">Description</th>
                 <th class="px-4 py-3">Actions</th>
               </tr>
             </thead>
@@ -30,35 +30,26 @@
               class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
             >
               <tr class="text-gray-700 dark:text-gray-400"
-              v-for="store in stores" :key="store.id">
-              <td class="px-4 py-3">
-                <div class="flex items-center text-sm">
-                  <div>
-                    <p class="font-semibold"> {{ store.id }}</p>
-                  </div>
-                </div>
-              </td>
+              v-for="product in products" :key="product.id">
                 <td class="px-4 py-3">
                   <div class="flex items-center text-sm">
                     <div>
-                      <p class="font-semibold"> {{ store.name }}</p>
+                      <p class="font-semibold"> {{ product.name }}</p>
                     </div>
                   </div>
                 </td>
-                <td class="px-4 py-3">
-                  <div class="flex items-center text-sm">
-                    <div>
-                      <p class="font-semibold"> {{ store.branch?.name || 'NA'  }}</p>
-                    </div>
-                  </div>
+                <td class="px-4 py-3 text-sm">
+                    {{ product.sku }}
                 </td>
-
+                <td class="px-4 py-3 text-sm">
+                    {{ product.description }}
+                </td>
                 <td class="px-4 py-3">
                     <div class="flex items-center space-x-4 text-sm">
                       <button
                         class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                         aria-label="Edit"
-                        @click="openModal(store)"
+                        @click="openModal(product)"
                       >
                         <svg
                           class="w-5 h-5"
@@ -74,7 +65,7 @@
                       <button
                         class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                         aria-label="Delete"
-                        @click="deletestore(store)"
+                        @click="deleteProduct(product)"
                       >
                         <svg
                           class="w-5 h-5"
@@ -96,16 +87,16 @@
           </table>
     </div>
 </div>
-    <EditStoreModal
+    <EditProductModal
     :editVisible="editModal"
-    :storeData="selectedstore"
+    :productData="selectedProduct"
     @closeEdit="closeModal()"
-    @edit="editstore()"
+    @edit="editProduct()"
     />
-    <CreateStoreModal
+    <CreateProductModal
     :isVisible="isModalOpen"
     @close="closeModal()"
-    @create="createstore()"
+    @create="createProduct()"
     />
 
 </template>
@@ -114,8 +105,8 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import { mapActions, mapState } from 'pinia';
-import CreateStoreModal from '../modals/createStoreModal.vue';
-import EditStoreModal from '../modals/editStoreModal.vue';
+import CreateProductModal from '../modals/createProductModal.vue';
+import EditProductModal from '../modals/editProductModal.vue';
 import { useCounterStore } from '../store.js';
 
 
@@ -124,36 +115,36 @@ export default {
     data() {
         return {
             isModalOpen: false,
-            selectedstore: {},
+            selectedProduct: {},
             editModal: false,
             alertMessage:'',
             alertType: ''
         };
     },
     mounted () {
-        // this.fetchStores();
+        // this.fetchProducts();
     },
     components: {
-        CreateStoreModal,
-        EditStoreModal
+        CreateProductModal,
+        EditProductModal
     },
     computed: {
-        ...mapState(useCounterStore, ['stores', 'message', 'error']),
+        ...mapState(useCounterStore, ['products', 'message', 'error']),
     },
     methods: {
-        ...mapActions(useCounterStore, ['addStore','fetchStores', 'removeStore']),
+        ...mapActions(useCounterStore, ['addProduct','fetchProducts', 'removeProduct']),
 
-        openModal(store) {
-            this.selectedstore = { ...store };
+        openModal(product) {
+            this.selectedProduct = { ...product };
             this.editModal = true;
         },
-        openCreatestore() {
+        openCreateProduct() {
             this.isModalOpen = true;
         },
-        editstore () {
-            this.fetchStores();
+        editProduct () {
+            this.fetchProducts();
         },
-        async deletestore(store) {
+        async deleteProduct(product) {
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
@@ -164,18 +155,18 @@ export default {
                 confirmButtonText: "Yes, Delete it!"
                 }).then((result) => {
                 if (result.isConfirmed) {
-                    let storeId = store.id;
+                    let groupId = product.id;
                     try {
-                      this.removeStore(storeId);
-                      this.fetchStores();
+                      this.removeProduct(groupId);
+                      this.fetchProducts();
                     } catch (error) {
-                        console.error('error deleting store', error);
+                        console.error('error deleting product', error);
                     }
                 }
                 });
         },
-        createstore () {
-            this.fetchStores();
+        createProduct () {
+            this.fetchProducts();
         },
         closeModal() {
             this.isModalOpen = false;

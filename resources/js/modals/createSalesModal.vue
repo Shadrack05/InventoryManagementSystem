@@ -38,32 +38,58 @@
         <p
           class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
         >
-          Create Store
+          Add Sale
         </p>
         <!-- Modal description -->
-        <label class="block text-sm">
-          <span class="text-gray-700 dark:text-gray-400">Name</span>
-          <input
-            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-            placeholder="Store Name"
-            v-model="name"
-          />
-        </label>
-
         <label class="block mt-4 text-sm mb-3">
             <span class="text-gray-700 dark:text-gray-400">
-              Branch
+              Product
             </span>
             <select
               class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
-              v-model="branchId"
+              v-model="productId"
             >
-            <option disabled value="">Branch Name</option>
+            <option disabled value="">Product</option>
               <option
-              v-for="option in branches" :value="option.id" :key="option.id"
-              >{{ option.name }}</option>
+              v-for="option in products" :value="option.id" :key="option.id"
+              >{{ option.name }} - {{ option.sku }}</option>
             </select>
           </label>
+
+        <label class="block mt-4 text-sm mb-3">
+            <span class="text-gray-700 dark:text-gray-400">
+              Store
+            </span>
+            <select
+              class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
+              v-model="storeId"
+            >
+            <option disabled value="">Store</option>
+              <option
+              v-for="option in stores" :value="option.id" :key="option.id"
+              >{{ option.name }} - {{ option.branch?.name || 'NA'}}</option>
+            </select>
+          </label>
+
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Quantity</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="quantity"
+            type="number"
+            v-model="quantity"
+          />
+        </label>
+
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Price</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="0.00"
+            type="number"
+            v-model="soldAt"
+          />
+        </label>
 
       </div>
       <footer
@@ -71,7 +97,7 @@
       >
         <button
           class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-          @click="createStore"
+          @click="createSale"
         >
         <span v-if="isLoading">
             <svg class="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24">
@@ -79,7 +105,7 @@
               <path class="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8H4z"></path>
             </svg>
           </span>
-          <span v-else>Create Store</span>
+          <span v-else>Create Sale</span>
         </button>
       </footer>
     </div>
@@ -103,48 +129,53 @@ export default {
     },
     data() {
         return {
-            name: '',
-            store: {},
+            soldAt: null,
+            quantity: null,
+            productId: null,
+            storeId: null,
+            sale: {},
             error: 'error',
             succcess: 'success',
             isLoading: false,
-            branchId: null,
         };
 
     },
     computed: {
-        // You can add computed properties here if needed
-        ...mapState(useCounterStore, ['branches']),
+        ...mapState(useCounterStore, ['products', 'stores']),
     },
     mounted () {
         //
     },
     methods: {
-        ...mapActions(useCounterStore, ['addStore']),
+        ...mapActions(useCounterStore, ['addSale']),
 
     closeModal() {
       this.$emit('close');
     },
-    async createStore() {
+    async createSale() {
         try {
             this.isLoading = true;
-            this.store.name = this.name;
-            this.store.branchId = this.branchId;
+            this.sale.productId = this.productId;
+            this.sale.storeId = this.storeId;
+            this.sale.quantity = this.quantity;
+            this.sale.soldAt= this.soldAt;
 
-            await this.addStore(this.store);
+            await this.addSale(this.sale); // Assuming addSale is an async action
 
             this.$emit('create');
             this.closeModal();
             this.resetForm();
         } catch (error) {
-            console.error('Error creating store:', error);
+            console.error('Error creating sale:', error);
         } finally {
             this.isLoading = false;
         }
     },
     resetForm () {
-        this.name = '';
-        this.branchId = null;
+        this.soldAt = null;
+        this.quantity = null;
+        this.productId = null;
+        this.storeId = null;
     },
   },
   watch: {

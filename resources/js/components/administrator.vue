@@ -4,14 +4,14 @@
             <p
             class="mt-2 mb-3 text-lg font-semibold text-gray-700 dark:text-gray-300"
           >
-           Stores
+           Administrators
           </p>
 
         <div class="flex items-center space-x-8 mt-2 mb-2">
             <button class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                @click="openCreatestore()"
+                @click="openCreateAdmin()"
                 >
-                    + Add Store
+                    + Add Admin
                 </button>
         </div>
 
@@ -20,9 +20,8 @@
               <tr
                 class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
               >
-                <th class="px-4 py-3">Id</th>
                 <th class="px-4 py-3">Name</th>
-                <th class="px-4 py-3">Parent Branch</th>
+                <th class="px-4 py-3">Position</th>
                 <th class="px-4 py-3">Actions</th>
               </tr>
             </thead>
@@ -30,35 +29,25 @@
               class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
             >
               <tr class="text-gray-700 dark:text-gray-400"
-              v-for="store in stores" :key="store.id">
-              <td class="px-4 py-3">
-                <div class="flex items-center text-sm">
-                  <div>
-                    <p class="font-semibold"> {{ store.id }}</p>
-                  </div>
-                </div>
-              </td>
+              v-for="admin in admins" :key="admin.id">
                 <td class="px-4 py-3">
                   <div class="flex items-center text-sm">
                     <div>
-                      <p class="font-semibold"> {{ store.name }}</p>
+                      <p class="font-semibold"> {{ admin.name }}</p>
                     </div>
                   </div>
                 </td>
-                <td class="px-4 py-3">
-                  <div class="flex items-center text-sm">
-                    <div>
-                      <p class="font-semibold"> {{ store.branch?.name || 'NA'  }}</p>
-                    </div>
-                  </div>
+                <td class="px-4 py-3 text-sm">
+                    <span>
+                    {{ admin.roles.length ? admin.roles.map(role => role.name).join(', ') : 'No Role' }}
+                </span>
                 </td>
-
                 <td class="px-4 py-3">
                     <div class="flex items-center space-x-4 text-sm">
                       <button
                         class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                         aria-label="Edit"
-                        @click="openModal(store)"
+                        @click="openModal(admin)"
                       >
                         <svg
                           class="w-5 h-5"
@@ -71,10 +60,10 @@
                           ></path>
                         </svg>
                       </button>
-                      <button
+                      <!-- <button
                         class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                         aria-label="Delete"
-                        @click="deletestore(store)"
+                        @click="deleteAdmin(admin)"
                       >
                         <svg
                           class="w-5 h-5"
@@ -88,7 +77,7 @@
                             clip-rule="evenodd"
                           ></path>
                         </svg>
-                      </button>
+                      </button> -->
                     </div>
                   </td>
               </tr>
@@ -96,16 +85,16 @@
           </table>
     </div>
 </div>
-    <EditStoreModal
+    <EditAdminModal
     :editVisible="editModal"
-    :storeData="selectedstore"
+    :adminData="selectedAdmin"
     @closeEdit="closeModal()"
-    @edit="editstore()"
+    @edit="editAdmin()"
     />
-    <CreateStoreModal
+    <CreateAdminModal
     :isVisible="isModalOpen"
     @close="closeModal()"
-    @create="createstore()"
+    @create="createAdmin()"
     />
 
 </template>
@@ -114,8 +103,8 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import { mapActions, mapState } from 'pinia';
-import CreateStoreModal from '../modals/createStoreModal.vue';
-import EditStoreModal from '../modals/editStoreModal.vue';
+import CreateAdminModal from '../modals/createAdminModal.vue';
+import EditAdminModal from '../modals/editAdminModal.vue';
 import { useCounterStore } from '../store.js';
 
 
@@ -124,36 +113,39 @@ export default {
     data() {
         return {
             isModalOpen: false,
-            selectedstore: {},
+            selectedAdmin: {},
             editModal: false,
             alertMessage:'',
             alertType: ''
         };
     },
     mounted () {
-        // this.fetchStores();
+        this.fetchAdmins();
     },
     components: {
-        CreateStoreModal,
-        EditStoreModal
+        CreateAdminModal,
+        EditAdminModal
     },
     computed: {
-        ...mapState(useCounterStore, ['stores', 'message', 'error']),
+        ...mapState(useCounterStore, ['admins', 'message', 'error', 'roles']),
     },
     methods: {
-        ...mapActions(useCounterStore, ['addStore','fetchStores', 'removeStore']),
+        ...mapActions(useCounterStore, ['addAdmin','fetchAdmins', 'removeAdmin']),
 
-        openModal(store) {
-            this.selectedstore = { ...store };
+        openModal(admin) {
+            this.selectedAdmin = {
+                ...admin,
+                role: admin.roles && admin.roles.length ? admin.roles[0].name : null
+            };
             this.editModal = true;
         },
-        openCreatestore() {
+        openCreateAdmin() {
             this.isModalOpen = true;
         },
-        editstore () {
-            this.fetchStores();
+        editAdmin () {
+            this.fetchAdmins();
         },
-        async deletestore(store) {
+        async deleteAdmin(admin) {
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
@@ -164,18 +156,18 @@ export default {
                 confirmButtonText: "Yes, Delete it!"
                 }).then((result) => {
                 if (result.isConfirmed) {
-                    let storeId = store.id;
+                    let adminId = admin.id;
                     try {
-                      this.removeStore(storeId);
-                      this.fetchStores();
+                      this.removeAdmin(adminId);
+                      this.fetchAdmins();
                     } catch (error) {
-                        console.error('error deleting store', error);
+                        console.error('error deleting admin', error);
                     }
                 }
                 });
         },
-        createstore () {
-            this.fetchStores();
+        createAdmin () {
+            this.fetchAdmins();
         },
         closeModal() {
             this.isModalOpen = false;

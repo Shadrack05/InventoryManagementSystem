@@ -45,32 +45,58 @@
         <p
           class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
         >
-          Edit Store
+          Edit Sale
         </p>
         <!-- Modal description -->
-        <label class="block text-sm">
-          <span class="text-gray-700 dark:text-gray-400">Name</span>
-          <input
-            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-            placeholder="Store Name"
-            v-model="store.name"
-          />
-        </label>
-
         <label class="block mt-4 text-sm mb-3">
             <span class="text-gray-700 dark:text-gray-400">
-              Branch
+              Product
             </span>
             <select
               class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
-              v-model="branchId"
+              v-model="productId"
             >
-            <option disabled value="">Branch Name</option>
+            <option disabled value="">Product</option>
               <option
-              v-for="option in branches" :value="option.id" :key="option.id"
-              >{{ option.name }}</option>
+              v-for="option in products" :value="option.id" :key="option.id"
+              >{{ option.name }} - {{ option.sku }}</option>
             </select>
           </label>
+
+        <label class="block mt-4 text-sm mb-3">
+            <span class="text-gray-700 dark:text-gray-400">
+              Store
+            </span>
+            <select
+              class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
+              v-model="storeId"
+            >
+            <option disabled value="">Store</option>
+              <option
+              v-for="option in stores" :value="option.id" :key="option.id"
+              >{{ option.name }} - {{ option.branch?.name || 'NA'}}</option>
+            </select>
+          </label>
+
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Quantity</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="quantity"
+            type="number"
+            v-model="sale.quantity"
+          />
+        </label>
+
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Price</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="0.00"
+            type="number"
+            v-model="sale.sold_at"
+          />
+        </label>
 
       </div>
       <footer
@@ -78,9 +104,9 @@
       >
         <button
           class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-          @click="updateStore"
+          @click="updateSale"
         >
-          Edit Store
+          Edit Sale
         </button>
       </footer>
     </div>
@@ -97,31 +123,36 @@ import { useCounterStore } from '../store';
 
 export default {
     props: {
-        editVisible: {
-            type: Boolean,
-            default: false
-        },
-        storeData: {
-            type: Object,
-            required: true
-        }
+    editVisible: {
+      type: Boolean,
+      default: false
+    },
+    saleData: {
+      type: Object,
+      required: true
+    }
     },
     data() {
         return {
-            store: { ...this.storeData },
+            sale: { ...this.saleData },
         };
     },
     computed: {
-        ...mapState(useCounterStore, ['branches']),
-        branchId: {
+        ...mapState(useCounterStore, ['products', 'stores']),
+        productId: {
             get() {
-                return this.store.branch ? this.store.branch.id : null;
+                return this.sale.product_id;
             },
             set(value) {
-                if (!this.store.branch) {
-                    this.store.branch = {};
-                }
-                this.store.branch.id = value;
+                this.sale.product_id = value;
+            }
+        },
+        storeId: {
+            get() {
+                return this.sale.store_id;
+            },
+            set(value) {
+                this.sale.store_id = value;
             }
         }
     },
@@ -132,24 +163,24 @@ export default {
         //
     },
     watch: {
-        storeData: {
-            handler(newStore) {
-            this.store = { ...newStore };
+        saleData: {
+            handler(newSale) {
+                this.sale = { ...newSale };
             },
             deep: true,
             immediate: true
         }
     },
     methods: {
-        ...mapActions(useCounterStore, ['editStore']),
+        ...mapActions(useCounterStore, ['editSale']),
 
     closeModal() {
       this.$emit('closeEdit');
     },
-    async updateStore() {
+    async updateSale() {
         Swal.fire({
         title: "Are you sure?",
-        text: "Do you want to edit store",
+        text: "Do you want to edit sale",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -157,13 +188,13 @@ export default {
         confirmButtonText: "Yes, update it!"
         }).then((result) => {
         if (result.isConfirmed) {
-            let storeId = this.store.id;
-            this.store.branch_id = this.branchId;
-
+            let saleId = this.sale.id;
+            this.sale.product_id = this.productId;
+            this.sale.store_id = this.storeId;
             try {
-                this.editStore(storeId, this.store);
+                this.editSale(saleId, this.sale);
             } catch (error) {
-                console.error('Error editing store', error);
+                console.error('Error editing sale', error);
             } finally {
                 this.$emit('edit');
                 this.closeModal();

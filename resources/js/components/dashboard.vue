@@ -163,6 +163,151 @@
               <span class="ml-4">Stores</span>
             </a>
           </li>
+        <li class="relative px-6 py-3">
+            <span
+            v-if="currentView === 'ProductsComponent'"
+              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+              aria-hidden="true"
+            ></span>
+            <a
+             :class="{ 'dark:text-gray-100': currentView ==='MessageComponent'}"
+              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+              href="#"
+              @click="currentView = 'ProductsComponent'"
+            >
+              <svg
+                class="w-5 h-5"
+                aria-hidden="true"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                ></path>
+              </svg>
+              <span class="ml-4">Products</span>
+            </a>
+          </li>
+        <li class="relative px-6 py-3">
+            <span
+            v-if="currentView === 'InventoryComponent'"
+              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+              aria-hidden="true"
+            ></span>
+            <a
+             :class="{ 'dark:text-gray-100': currentView ==='MessageComponent'}"
+              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+              href="#"
+              @click="currentView = 'InventoryComponent'"
+            >
+              <svg
+                class="w-5 h-5"
+                aria-hidden="true"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                ></path>
+              </svg>
+              <span class="ml-4">Inventory</span>
+            </a>
+          </li>
+        <li class="relative px-6 py-3">
+            <span
+            v-if="currentView === 'SalesComponent'"
+              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+              aria-hidden="true"
+            ></span>
+            <a
+             :class="{ 'dark:text-gray-100': currentView ==='MessageComponent'}"
+              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+              href="#"
+              @click="currentView = 'SalesComponent'"
+            >
+              <svg
+                class="w-5 h-5"
+                aria-hidden="true"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                ></path>
+              </svg>
+              <span class="ml-4">Sales</span>
+            </a>
+          </li>
+        <li class="relative px-6 py-3">
+            <span
+            v-if="currentView === 'TransferComponent'"
+              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+              aria-hidden="true"
+            ></span>
+            <a
+             :class="{ 'dark:text-gray-100': currentView ==='MessageComponent'}"
+              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+              href="#"
+              @click="currentView = 'TransferComponent'"
+            >
+              <svg
+                class="w-5 h-5"
+                aria-hidden="true"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                ></path>
+              </svg>
+              <span class="ml-4">Transfers</span>
+            </a>
+          </li>
+        <li class="relative px-6 py-3">
+            <span
+            v-if="currentView === 'AdminComponent'"
+              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+              aria-hidden="true"
+            ></span>
+            <a
+             :class="{ 'dark:text-gray-100': currentView ==='MessageComponent'}"
+              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+              href="#"
+              @click="currentView = 'AdminComponent'"
+            >
+              <svg
+                class="w-5 h-5"
+                aria-hidden="true"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                ></path>
+              </svg>
+              <span class="ml-4">Roles</span>
+            </a>
+          </li>
           <li v-if="Roles.includes('admin') || Roles.includes('finance')" class="relative px-6 py-3">
             <a
               href="#"
@@ -254,7 +399,7 @@
                     d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
                   ></path>
                 </svg>
-                <span class="ml-4">Settings</span>
+                <span class="ml-4">Branches</span>
               </span>
               <svg
                 class="w-4 h-4"
@@ -275,7 +420,8 @@
                 aria-label="submenu"
               >
                 <li
-                v-if="Roles.includes('admin') || Roles.includes('groups')"
+                v-for="branch in branches"
+                :key="branch.id"
                   class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                 >
                 <span
@@ -285,74 +431,8 @@
                 ></span>
                   <a class="w-full" href="#"
                   @click="currentView = 'GroupsComponent'"
-                  >Groups</a>
+                  >{{ branch.name }}</a>
                 </li>
-                <li
-                v-if="Roles.includes('admin') || Roles.includes('groups')"
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                <span
-                v-if="currentView === 'FellowshipComponent'"
-                  class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                  aria-hidden="true"
-                ></span>
-                  <a class="w-full" href="#"
-                  @click="currentView='FellowshipComponent'"
-                  >
-                    Fellowship Zones
-                  </a>
-                </li>
-                <li
-                v-if="Roles.includes('admin')"
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                <span
-                v-if="currentView === 'AdminComponent'"
-                  class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                  aria-hidden="true"
-                ></span>
-                  <a class="w-full" href="#"
-                  @click="currentView='AdminComponent'">
-                    Administrators
-                  </a>
-                </li>
-                <li
-                v-if="Roles.includes('admin')"
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                <span
-                v-if="currentView === 'RoleComponent'"
-                  class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                  aria-hidden="true"
-                ></span>
-                  <a class="w-full" href="#"
-                  @click="currentView='RoleComponent'"
-                  >Positions</a>
-                </li>
-                <li
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                <span
-                v-if="currentView === 'ServicesComponent'"
-                  class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                  aria-hidden="true"
-                ></span>
-                  <a class="w-full" href="#"
-                  @click="currentView='ServicesComponent'"
-                  >Services</a>
-                </li>
-            <li
-                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-              >
-              <span
-              v-if="currentView === 'AttendanceComponent'"
-                class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                aria-hidden="true"
-              ></span>
-                <a class="w-full" href="#"
-                @click="currentView='AttendanceComponent'"
-                >Attendance</a>
-              </li>
               </ul>
             </template>
           </li>
@@ -666,7 +746,7 @@
           </button>
           <!-- Search input -->
           <div class="flex justify-center flex-1 lg:mr-32">
-            <div
+            <!-- <div
               class="relative w-full max-w-xl mr-6 focus-within:text-purple-500"
             >
               <div class="absolute inset-y-0 flex items-center pl-2">
@@ -691,7 +771,7 @@
                 v-model="searchQuery"
                 @input="onInputChange"
               />
-            </div>
+            </div> -->
           </div>
           <ul class="flex items-center flex-shrink-0 space-x-6">
             <!-- Theme toggler -->
@@ -827,6 +907,11 @@
     import storeStatComponent from './storeHome.vue';
     import BranchCrud from './branchCRUD.vue';
     import StoreCrud from './storesCRUD.vue';
+    import ProductsComponent from './products.vue';
+    import InventoryComponent from './Inventory.vue';
+    import SalesComponent from './sales.vue';
+    import TransferComponent from './transfers.vue';
+    import AdminComponent from './administrator.vue';
 
     // import CreateComponent from './create.vue';
     // import Register from './register.vue';
@@ -856,12 +941,18 @@
         };
       },
       computed: {
-        ...mapState(useCounterStore, ['Roles']),
+        ...mapState(useCounterStore, ['Roles', 'branches', 'stores']),
         ...mapWritableState(useCounterStore, ['searchQuery', 'currentView']),
       },
       mounted()  {
         this.fetchAdminRoles();
         this.fetchBranches();
+        this.fetchStores();
+        this.fetchProducts();
+        this.fetchInventories();
+        this.fetchSales();
+        this.fetchTransfers();
+        this.fetchRoles();
 
       },
     components: {
@@ -870,6 +961,11 @@
             storeStatComponent,
             BranchCrud,
             StoreCrud,
+            ProductsComponent,
+            InventoryComponent,
+            SalesComponent,
+            TransferComponent,
+            AdminComponent,
             // MessageComponent,
             // GroupsComponent,
             // CreateComponent,
@@ -877,7 +973,6 @@
             // FellowshipComponent,
             // Member,
             // RoleComponent,
-            // AdminComponent,
             // ServicesComponent,
             // AttendanceComponent,
             // OffertoryComponent,
@@ -906,25 +1001,12 @@
     }
   },
       methods: {
-        // ...mapActions(useCounterStore, ['fetchMembers', 'setSearchQuery', 'fetchGroups',
-        //  'fetchFellowships', 'fetchCounties', 'fetchRoles', 'fetchServices', 'fetchTithes',
-        // 'fetchGivings']),
-        ...mapActions(useCounterStore, ['fetchAdminRoles', 'fetchBranches']),
+        ...mapActions(useCounterStore, ['fetchAdminRoles', 'fetchBranches', 'fetchStores', 'fetchProducts',
+        'fetchInventories', 'fetchSales', 'fetchTransfers', 'fetchRoles']),
 
          toggleFinanceMenu() {
           this.isFinanceMenuOpen = !this.isFinanceMenuOpen;
          },
-        //  async fetchAdminRoles() {
-        //     try {
-        //         const response = await axios.get('/api/user-role');
-        //         this.Roles = response.data.roles;
-        //         console.log('Roles fetched successfully:', this.Roles);
-        //     } catch (error) {
-        //         console.error('Error fetching roles:', error);
-
-        //     }
-
-        // },
          onInputChange() {
             this.setSearchQuery(this.searchQuery);
             this.fetchMembers();
