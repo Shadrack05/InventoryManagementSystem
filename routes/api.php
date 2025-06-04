@@ -70,7 +70,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/edit-admin/{id}', [AdminController::class, 'update']);
 
     // Roles
+    Route::post('/create-position', [RoleController::class, 'create']);
     Route::get('/roles', [RoleController::class, 'index']);
+    Route::post('/edit-position/{id}', [RoleController::class, 'update']);
+    Route::delete('/delete-position/{id}', [RoleController::class, 'destroy']);
 
 
 });

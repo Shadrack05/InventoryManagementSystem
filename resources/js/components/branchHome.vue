@@ -7,7 +7,7 @@
         Dashboard
       </h2>
       <!-- Cards -->
-      <div v-if="Roles.includes('branch1') || Roles.includes('branch2')" class="grid gap-6 mb-8 md:grid-cols-4 xl:grid-cols-4">
+      <div v-if="hasBranchRole" class="grid gap-6 mb-8 md:grid-cols-4 xl:grid-cols-4">
         <!-- Card -->
         <div
           class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
@@ -30,7 +30,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ totalSalesToday }}
+              {{ branch.totalSalesToday }}
             </p>
           </div>
         </div>
@@ -58,7 +58,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ topProduct }}
+              {{ branch.topProduct }}
             </p>
           </div>
         </div>
@@ -79,12 +79,12 @@
             <p
               class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400"
             >
-              Slowest Moving Product
+            Least Selling Product
             </p>
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ Women }}
+              {{ branch.leastProduct }}
             </p>
           </div>
         </div>
@@ -112,7 +112,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ Children }}
+              {{ branch.totalTransfers }}
             </p>
           </div>
         </div>
@@ -139,36 +139,28 @@
             totalSalesToday: null,
             topProduct: null,
             leastProduct: null,
-            totalTransfers: null
+            totalTransfers: null,
         };
     },
     computed: {
-        ...mapWritableState(useCounterStore, ['Roles']),
+        ...mapWritableState(useCounterStore, ['Roles', 'branch']),
+
+    hasBranchRole() {
+        return this.Roles.some(role => /^branch\d+$/.test(role));
+    },
+
+    hasStoreRole() {
+        return this.Roles.some(role => /^store\d+$/.test(role));
+    },
+
     },
     components: {
         // ChartComponent,
     },
     mounted() {
-    this.getStatistics();
     },
     methods: {
-        ...mapActions(useCounterStore, ['fetchMembers', 'fetchGroups', 'removeMember', 'fetchFellowships']),
 
-        async getStatistics() {
-            try {
-            const response = await axios.get('/api/admin/statistics');
-            this.totalSalesToday = response.data.totalSalesToday;
-            this.topProduct = response.data.topProduct;
-            this.leastProduct = response.data.leastProduct;
-            this.totalTransfers = response.data.totalTransfers;
-            } catch (error) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "error in fetching church metrics",
-                });
-            }
-        },
     },
   };
 </script>

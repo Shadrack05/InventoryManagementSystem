@@ -7,7 +7,7 @@
         Dashboard
       </h2>
       <!-- Cards -->
-      <div v-if="Roles.includes('store1') || Roles.includes('store2') || Roles.includes('store3')" class="grid gap-6 mb-8 md:grid-cols-4 xl:grid-cols-4">
+      <div v-if="hasStoreRole" class="grid gap-6 mb-8 md:grid-cols-4 xl:grid-cols-4">
         <!-- Card -->
         <div
           class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
@@ -30,7 +30,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ totalSalesToday }}
+              {{ storeStatistics.today?.totalSales || 0 }}
             </p>
           </div>
         </div>
@@ -58,7 +58,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ topProduct }}
+              {{ storeStatistics.today?.topProduct || 'N/A' }}
             </p>
           </div>
         </div>
@@ -84,7 +84,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ Women }}
+              {{ storeStatistics.today?.leastProduct || 'N/A' }}
             </p>
           </div>
         </div>
@@ -112,7 +112,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ Children }}
+              {{ storeStatistics.today?.totalTransfers || 0 }}
             </p>
           </div>
         </div>
@@ -143,7 +143,11 @@
         };
     },
     computed: {
-        ...mapWritableState(useCounterStore, ['Roles']),
+        ...mapWritableState(useCounterStore, ['Roles', 'storeStatistics']),
+
+    hasStoreRole() {
+        return this.Roles.some(role => /^store\d+$/.test(role));
+    },
     },
     components: {
         // ChartComponent,

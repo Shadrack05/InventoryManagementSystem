@@ -41,16 +41,19 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Assign the default role to the user
+        $user->assignRole('admin');
+
         $user->createToken('auth_token')->plainTextToken;
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        return redirect()
+            ->route('login')
+            ->with('success', 'Registration successful. Please login to continue.');
     }
 
-        public function addAdmin(Request $request)
+    public function addAdmin(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],

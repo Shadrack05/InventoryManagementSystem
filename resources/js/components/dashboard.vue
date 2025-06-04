@@ -41,10 +41,10 @@
                   d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                 ></path>
               </svg>
-              <span class="ml-4">Dashboard</span>
+              <span class="ml-4">Admin Dashboard</span>
             </a>
           </li>
-          <li v-if="Roles.includes('branch1') || Roles.includes('branch2')" class="relative px-6 py-3">
+          <li v-if="hasBranchRole" class="relative px-6 py-3">
             <span
             v-if="currentView === 'branchStatComponent'"
               class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
@@ -70,10 +70,10 @@
                   d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                 ></path>
               </svg>
-              <span class="ml-4">Dashboard</span>
+              <span class="ml-4">Branch Dashboard</span>
             </a>
           </li>
-          <li v-if="Roles.includes('store1') || Roles.includes('store2') || Roles.includes('store3')" class="relative px-6 py-3">
+          <li v-if="hasStoreRole" class="relative px-6 py-3">
             <span
             v-if="currentView === 'storeStatComponent'"
               class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
@@ -99,12 +99,12 @@
                   d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                 ></path>
               </svg>
-              <span class="ml-4">Dashboard</span>
+              <span class="ml-4">Store Dashboard</span>
             </a>
           </li>
         </ul>
         <ul>
-        <li class="relative px-6 py-3">
+        <li v-if="Roles.includes('admin')" class="relative px-6 py-3">
             <span
             v-if="currentView === 'BranchCrud'"
               class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
@@ -130,11 +130,11 @@
                   d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
                 ></path>
               </svg>
-              <span class="ml-4">Branches</span>
+              <span class="ml-4">Branch Management</span>
             </a>
           </li>
           <!-- <li v-if="Roles.includes('admin') || Roles.includes('messages')" class="relative px-6 py-3"> -->
-        <li class="relative px-6 py-3">
+        <li v-if="Roles.includes('admin') || hasBranchRole" class="relative px-6 py-3">
             <span
             v-if="currentView === 'StoreCrud'"
               class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
@@ -160,126 +160,157 @@
                   d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                 ></path>
               </svg>
-              <span class="ml-4">Stores</span>
+              <span class="ml-4">Store Management</span>
             </a>
           </li>
         <li class="relative px-6 py-3">
-            <span
-            v-if="currentView === 'ProductsComponent'"
-              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-              aria-hidden="true"
-            ></span>
             <a
-             :class="{ 'dark:text-gray-100': currentView ==='MessageComponent'}"
-              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
               href="#"
-              @click="currentView = 'ProductsComponent'"
+              class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+              @click="toggleSettingsMenu"
+              aria-haspopup="true"
             >
+              <span class="inline-flex items-center">
+                <svg
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
+                  ></path>
+                </svg>
+                <span class="ml-4">Branches</span>
+              </span>
               <svg
-                class="w-5 h-5"
+                class="w-4 h-4"
                 aria-hidden="true"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                fill="currentColor"
+                viewBox="0 0 20 20"
               >
                 <path
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                  fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
                 ></path>
               </svg>
-              <span class="ml-4">Products</span>
             </a>
-          </li>
-        <li class="relative px-6 py-3">
-            <span
-            v-if="currentView === 'InventoryComponent'"
-              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-              aria-hidden="true"
-            ></span>
-            <a
-             :class="{ 'dark:text-gray-100': currentView ==='MessageComponent'}"
-              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-              href="#"
-              @click="currentView = 'InventoryComponent'"
-            >
-              <svg
-                class="w-5 h-5"
-                aria-hidden="true"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            <template v-if="isSettingsMenuOpen">
+              <ul
+                class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
+                aria-label="submenu"
               >
-                <path
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                ></path>
-              </svg>
-              <span class="ml-4">Inventory</span>
-            </a>
-          </li>
-        <li class="relative px-6 py-3">
-            <span
-            v-if="currentView === 'SalesComponent'"
-              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-              aria-hidden="true"
-            ></span>
-            <a
-             :class="{ 'dark:text-gray-100': currentView ==='MessageComponent'}"
-              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-              href="#"
-              @click="currentView = 'SalesComponent'"
-            >
-              <svg
-                class="w-5 h-5"
-                aria-hidden="true"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            <li
+                v-for="branch in branches"
+                :key="branch.id"
+                class="relative px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
               >
-                <path
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                ></path>
-              </svg>
-              <span class="ml-4">Sales</span>
-            </a>
+                <button
+                  class="inline-flex items-center justify-between w-full text-sm transition-colors"
+                  @click="toggleBranchMenu(branch.id)"
+                >
+                  <span>{{ branch.name }}</span>
+                  <svg
+                    class="w-4 h-4 transition-transform"
+                    :class="{ 'rotate-180': openBranch === branch.id }"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+
+                <!-- Stores Dropdown -->
+                <transition
+                  enter-active-class="transition-all duration-200 ease-out"
+                  leave-active-class="transition-all duration-150 ease-in"
+                  enter-class="opacity-0 -translate-y-1"
+                  enter-to-class="opacity-100 translate-y-0"
+                  leave-class="opacity-100 translate-y-0"
+                  leave-to-class="opacity-0 -translate-y-1"
+                >
+                  <ul v-if="openBranch === branch.id" class="pl-4 mt-2 space-y-1">
+                    <li
+                      v-for="store in filteredStores(branch.id)"
+                      :key="store.id"
+                      class="relative"
+                    >
+                      <button
+                        class="inline-flex items-center justify-between w-full px-2 py-1 text-sm transition-colors rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                        @click="toggleStoreMenu(store.id)"
+                      >
+                        <span>{{ store.name }}</span>
+                        <svg
+                          class="w-4 h-4 transition-transform"
+                          :class="{ 'rotate-180': openStore === store.id }"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </button>
+
+                      <!-- Actions Dropdown -->
+                      <transition
+                        enter-active-class="transition-all duration-200 ease-out"
+                        leave-active-class="transition-all duration-150 ease-in"
+                        enter-class="opacity-0 -translate-y-1"
+                        enter-to-class="opacity-100 translate-y-0"
+                        leave-class="opacity-100 translate-y-0"
+                        leave-to-class="opacity-0 -translate-y-1"
+                      >
+                        <ul v-if="openStore === store.id" class="pl-4 mt-1 space-y-1">
+                          <li>
+                            <a
+                              href="#"
+                              @click="viewInventory(store.id)"
+                              class="block px-2 py-1 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                            >
+                              Inventory
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="#"
+                              @click="viewSales(store.id)"
+                              class="block px-2 py-1 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                            >
+                              Sales
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="#"
+                              @click="viewTransfers(store.id)"
+                              class="block px-2 py-1 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                            >
+                              Transfers
+                            </a>
+                          </li>
+                        </ul>
+                      </transition>
+                    </li>
+                  </ul>
+                </transition>
+              </li>
+              </ul>
+            </template>
           </li>
-        <li class="relative px-6 py-3">
-            <span
-            v-if="currentView === 'TransferComponent'"
-              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-              aria-hidden="true"
-            ></span>
-            <a
-             :class="{ 'dark:text-gray-100': currentView ==='MessageComponent'}"
-              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-              href="#"
-              @click="currentView = 'TransferComponent'"
-            >
-              <svg
-                class="w-5 h-5"
-                aria-hidden="true"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                ></path>
-              </svg>
-              <span class="ml-4">Transfers</span>
-            </a>
-          </li>
-        <li class="relative px-6 py-3">
+
+        <li v-if="Roles.includes('admin')" class="relative px-6 py-3">
             <span
             v-if="currentView === 'AdminComponent'"
               class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
@@ -305,78 +336,103 @@
                   d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                 ></path>
               </svg>
+              <span class="ml-4">Users</span>
+            </a>
+          </li>
+
+        <li v-if="Roles.includes('admin')" class="relative px-6 py-3">
+            <span
+            v-if="currentView === 'RolesComponent'"
+              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+              aria-hidden="true"
+            ></span>
+            <a
+             :class="{ 'dark:text-gray-100': currentView ==='MessageComponent'}"
+              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+              href="#"
+              @click="currentView = 'RolesComponent'"
+            >
+              <svg
+                class="w-5 h-5"
+                aria-hidden="true"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                ></path>
+              </svg>
               <span class="ml-4">Roles</span>
             </a>
           </li>
-          <li v-if="Roles.includes('admin') || Roles.includes('finance')" class="relative px-6 py-3">
+        </ul>
+        <div class="px-6 my-6">
+        </div>
+      </div>
+    </aside>
+    <!-- Mobile sidebar -->
+    <!-- Backdrop -->
+  <transition
+    name="fade"
+  >
+    <div
+      v-if="isSideMenuOpen"
+      class="fixed inset-0 z-10 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center"
+    ></div>
+  </transition>
+<transition
+  name="slide-fade"
+>
+    <aside
+      class="fixed inset-y-0 z-20 flex-shrink-0 w-64 mt-16 overflow-y-auto bg-white dark:bg-gray-800 md:hidden"
+      v-if="isSideMenuOpen"
+      @keydown.escape="closeSideMenu"
+      tabindex="0"
+    >
+      <div
+      class="py-4 text-gray-500 dark:text-gray-400">
+        <a
+          class="ml-6 text-2xl font-bold text-gray-800 dark:text-gray-200"
+          href="#"
+        >
+          Inventory360
+        </a>
+        <ul class="mt-6">
+          <li class="relative px-6 py-3">
+            <span
+            v-if="currentView === 'HomeComponent'"
+              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+              aria-hidden="true"
+            ></span>
             <a
+            :class="{ 'dark:text-gray-100': currentView ==='HomeComponent'}"
+              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
               href="#"
-              class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-              @click="toggleFinanceMenu"
-              aria-haspopup="true"
+              @click="mobileHome"
             >
-              <span class="inline-flex items-center">
-                <svg
-                  class="w-5 h-5"
-                  aria-hidden="true"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                <path d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                </svg>
-                <span class="ml-4">Finance</span>
-              </span>
               <svg
-                class="w-4 h-4"
+                class="w-5 h-5"
                 aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
                 <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                 ></path>
               </svg>
+              <span class="ml-4">Dashboard</span>
             </a>
-            <template v-if="isFinanceMenuOpen">
-              <ul
-                class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
-                aria-label="submenu"
-              >
-                <li
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                <span
-                v-if="currentView === 'TitheComponent'"
-                  class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                  aria-hidden="true"
-                ></span>
-                  <a class="w-full" href="#"
-                  @click="currentView = 'TitheComponent'"
-                  >Tithe Recording</a>
-                </li>
-                <li
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                <span
-                v-if="currentView === 'OffertoryComponent'"
-                  class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                  aria-hidden="true"
-                ></span>
-                  <a class="w-full" href="#"
-                  @click="currentView='OffertoryComponent'"
-                  >
-                    Giving Recording
-                  </a>
-                </li>
-              </ul>
-            </template>
           </li>
+        </ul>
+        <ul>
           <li class="relative px-6 py-3">
             <a
               href="#"
@@ -422,294 +478,103 @@
                 <li
                 v-for="branch in branches"
                 :key="branch.id"
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                class="relative px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+              >
+                <button
+                  class="inline-flex items-center justify-between w-full text-sm transition-colors"
+                  @click="toggleBranchMenu(branch.id)"
                 >
-                <span
-                v-if="currentView === 'GroupsComponent'"
-                  class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                  aria-hidden="true"
-                ></span>
-                  <a class="w-full" href="#"
-                  @click="currentView = 'GroupsComponent'"
-                  >{{ branch.name }}</a>
-                </li>
-              </ul>
-            </template>
-          </li>
-        </ul>
-        <div class="px-6 my-6">
-        </div>
-      </div>
-    </aside>
-    <!-- Mobile sidebar -->
-    <!-- Backdrop -->
-  <transition
-    name="fade"
-    @before-enter="beforeEnter"
-    @enter="enter"
-    @leave="leave"
-  >
-    <div
-      v-if="isSideMenuOpen"
-      class="fixed inset-0 z-10 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center"
-    ></div>
-  </transition>
-<transition
-  name="slide-fade"
-  @before-enter="beforeEnter"
-  @enter="enter"
-  @leave="leave"
->
-    <aside
-      class="fixed inset-y-0 z-20 flex-shrink-0 w-64 mt-16 overflow-y-auto bg-white dark:bg-gray-800 md:hidden"
-      v-if="isSideMenuOpen"
-      @keydown.escape="closeSideMenu"
-      tabindex="0"
-    >
-      <div
-      class="py-4 text-gray-500 dark:text-gray-400">
-        <a
-          class="ml-6 text-2xl font-bold text-gray-800 dark:text-gray-200"
-          href="#"
-        >
-          Imanisoft
-        </a>
-        <ul class="mt-6">
-          <li class="relative px-6 py-3">
-            <span
-            v-if="currentView === 'HomeComponent'"
-              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-              aria-hidden="true"
-            ></span>
-            <a
-            :class="{ 'dark:text-gray-100': currentView ==='HomeComponent'}"
-              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-              href="#"
-              @click="mobileHome"
-            >
-              <svg
-                class="w-5 h-5"
-                aria-hidden="true"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                ></path>
-              </svg>
-              <span class="ml-4">Dashboard</span>
-            </a>
-          </li>
-        </ul>
-        <ul>
-          <li class="relative px-6 py-3">
-            <span
-            v-if="currentView === 'Member'"
-              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-              aria-hidden="true"
-            ></span>
-            <a
-            :class="{ 'dark:text-gray-100': currentView ==='Member'}"
-              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-              href="#"
-              @click="mobileMember"
-            >
-                <svg
-                    class="w-5 h-5"
-                    aria-hidden="true"
-                    fill="none"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-            <path
-              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-            ></path>
-                <path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
-              </svg>
-              <span class="ml-4">Memeber Management</span>
-            </a>
-          </li>
-          <li class="relative px-6 py-3">
-            <span
-            v-if="currentView === 'MessageComponent'"
-              class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-              aria-hidden="true"
-            ></span>
-            <a
-            :class="{ 'dark:text-gray-100': currentView ==='MessageComponent'}"
-              class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-              href="#"
-              @click="mobileMessage"
-            >
-              <svg
-                class="w-5 h-5"
-                aria-hidden="true"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                ></path>
-              </svg>
-              <span class="ml-4">Messaging</span>
-            </a>
-          </li>
-          <li class="relative px-6 py-3">
-            <a
-              href="#"
-              class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-              @click="toggleFinanceMenu"
-              aria-haspopup="true"
-            >
-              <span class="inline-flex items-center">
-                <svg
-                  class="w-5 h-5"
-                  aria-hidden="true"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-              >
-              <path d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                </svg>
-                <span class="ml-4">Finance</span>
-              </span>
-              <svg
-                class="w-4 h-4"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </a>
-            <template v-if="isFinanceMenuOpen">
-              <ul
-                class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
-                aria-label="submenu"
-              >
-                <li
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                  <a class="w-full" href="#"
-                  @click="mobileTithes"
-                  >Tithe Recording</a>
-                </li>
-                <li
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                  <a class="w-full" href="#"
-                  @click="mobileOffertory"
+                  <span>{{ branch.name }}</span>
+                  <svg
+                    class="w-4 h-4 transition-transform"
+                    :class="{ 'rotate-180': openBranch === branch.id }"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
                   >
-                    Giving Recording
-                  </a>
-                </li>
-              </ul>
-            </template>
-          </li>
-          <li class="relative px-6 py-3">
-            <a
-              href="#"
-              class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-              @click="toggleSettingsMenu"
-              aria-haspopup="true"
-            >
-              <span class="inline-flex items-center">
-                <svg
-                  class="w-5 h-5"
-                  aria-hidden="true"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+
+                <!-- Stores Dropdown -->
+                <transition
+                  enter-active-class="transition-all duration-200 ease-out"
+                  leave-active-class="transition-all duration-150 ease-in"
+                  enter-class="opacity-0 -translate-y-1"
+                  enter-to-class="opacity-100 translate-y-0"
+                  leave-class="opacity-100 translate-y-0"
+                  leave-to-class="opacity-0 -translate-y-1"
                 >
-                  <path
-                    d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
-                  ></path>
-                </svg>
-                <span class="ml-4">Settings</span>
-              </span>
-              <svg
-                class="w-4 h-4"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </a>
-            <template v-if="isSettingsMenuOpen">
-              <ul
-                class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
-                aria-label="submenu"
-              >
-                <li
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                  <a class="w-full" href="#"
-                  @click="mobileGroups"
-                  >Groups</a>
-                </li>
-                <li
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                  <a class="w-full" href="#"
-                  @click="mobileFellowship"
-                  >
-                    Fellowship Zones
-                  </a>
-                </li>
-                <li
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                  <a class="w-full" href="#"
-                  @click="mobileAdministrator">
-                    Administrators
-                  </a>
-                </li>
-                <li
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                  <a class="w-full" href="#"
-                  @click="mobilePosition"
-                  >Positions</a>
-                </li>
-                <li
-                  class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                  <a class="w-full" href="#"
-                  @click="mobileServices"
-                  >Services</a>
-                </li>
-            <li
-                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-              >
-                <a class="w-full" href="#"
-                @click="mobileAttendance"
-                >Attendance</a>
+                  <ul v-if="openBranch === branch.id" class="pl-4 mt-2 space-y-1">
+                    <li
+                      v-for="store in filteredStores(branch.id)"
+                      :key="store.id"
+                      class="relative"
+                    >
+                      <button
+                        class="inline-flex items-center justify-between w-full px-2 py-1 text-sm transition-colors rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                        @click="toggleStoreMenu(store.id)"
+                      >
+                        <span>{{ store.name }}</span>
+                        <svg
+                          class="w-4 h-4 transition-transform"
+                          :class="{ 'rotate-180': openStore === store.id }"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </button>
+
+                      <!-- Actions Dropdown -->
+                      <transition
+                        enter-active-class="transition-all duration-200 ease-out"
+                        leave-active-class="transition-all duration-150 ease-in"
+                        enter-class="opacity-0 -translate-y-1"
+                        enter-to-class="opacity-100 translate-y-0"
+                        leave-class="opacity-100 translate-y-0"
+                        leave-to-class="opacity-0 -translate-y-1"
+                      >
+                        <ul v-if="openStore === store.id" class="pl-4 mt-1 space-y-1">
+                          <li>
+                            <a
+                              href="#"
+                              @click="viewInventory(store.id)"
+                              class="block px-2 py-1 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                            >
+                              Inventory
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="#"
+                              @click="viewSales(store.id)"
+                              class="block px-2 py-1 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                            >
+                              Sales
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="#"
+                              @click="viewTransfers(store.id)"
+                              class="block px-2 py-1 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                            >
+                              Transfers
+                            </a>
+                          </li>
+                        </ul>
+                      </transition>
+                    </li>
+                  </ul>
+                </transition>
               </li>
               </ul>
             </template>
@@ -746,32 +611,6 @@
           </button>
           <!-- Search input -->
           <div class="flex justify-center flex-1 lg:mr-32">
-            <!-- <div
-              class="relative w-full max-w-xl mr-6 focus-within:text-purple-500"
-            >
-              <div class="absolute inset-y-0 flex items-center pl-2">
-                <svg
-                  class="w-4 h-4"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </div>
-              <input
-                class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
-                type="text"
-                placeholder="Search by name"
-                aria-label="Search"
-                v-model="searchQuery"
-                @input="onInputChange"
-              />
-            </div> -->
           </div>
           <ul class="flex items-center flex-shrink-0 space-x-6">
             <!-- Theme toggler -->
@@ -830,8 +669,6 @@
               <template v-if="isProfileMenuOpen">
               <transition
                   name="fade"
-                  @before-leave="beforeLeave"
-                  @leave="leave"
                 >
                 <ul
                   @keydown.escape="closeProfileMenu"
@@ -895,97 +732,44 @@
     </div>
   </div>
 
-    </template>
+</template>
 
-    <script>
-    import axios from 'axios';
-    import { useCounterStore } from '../store.js';
-    import { mapActions, mapState } from 'pinia';
-    import { mapWritableState } from 'pinia';
-    import HomeComponent from './home.vue';
-    import branchStatComponent from './branchHome.vue';
-    import storeStatComponent from './storeHome.vue';
-    import BranchCrud from './branchCRUD.vue';
-    import StoreCrud from './storesCRUD.vue';
-    import ProductsComponent from './products.vue';
-    import InventoryComponent from './Inventory.vue';
-    import SalesComponent from './sales.vue';
-    import TransferComponent from './transfers.vue';
-    import AdminComponent from './administrator.vue';
+<script>
+import axios from 'axios';
+import { useCounterStore } from '../store.js';
+import { mapActions, mapState, mapWritableState } from 'pinia';
 
-    // import CreateComponent from './create.vue';
-    // import Register from './register.vue';
-    // import FellowshipComponent from './fellowshipZone.vue';
-    // import Member from './member.vue';
-    // import RoleComponent from './roles.vue';
-    // import AdminComponent from './administrator.vue';
-    // import ServicesComponent from './services.vue';
-    // import AttendanceComponent from './attendance.vue';
-    // import TitheComponent from './tithe.vue';
-    // import OffertoryComponent from './offertory.vue';
-    // import TitheCRUD from './titheCRUD.vue';
+// Import components
+import HomeComponent from './home.vue';
+import BranchStatComponent from './branchHome.vue';
+import StoreStatComponent from './storeHome.vue';
+import BranchCrud from './branchCRUD.vue';
+import StoreCrud from './storesCRUD.vue';
+import ProductsComponent from './products.vue';
+import InventoryComponent from './Inventory.vue';
+import SalesComponent from './sales.vue';
+import TransferComponent from './transfers.vue';
+import AdminComponent from './administrator.vue';
+import RolesComponent from './roles.vue';
 
+export default {
+  name: 'Dashboard',
 
-    export default {
-      data() {
-        return {
-          dark: false,
-          isSideMenuOpen: false,
-          isNotificationsMenuOpen: false,
-          isProfileMenuOpen: false,
-          isPagesMenuOpen: false,
-          isModalOpen: false,
-          trapCleanup: null,
-          isSettingsMenuOpen: false,
-          isFinanceMenuOpen: false,
-        };
-      },
-      computed: {
-        ...mapState(useCounterStore, ['Roles', 'branches', 'stores']),
-        ...mapWritableState(useCounterStore, ['searchQuery', 'currentView']),
-      },
-      mounted()  {
-        this.fetchAdminRoles();
-        this.fetchBranches();
-        this.fetchStores();
-        this.fetchProducts();
-        this.fetchInventories();
-        this.fetchSales();
-        this.fetchTransfers();
-        this.fetchRoles();
+  components: {
+    HomeComponent,
+    BranchStatComponent,
+    StoreStatComponent,
+    BranchCrud,
+    StoreCrud,
+    ProductsComponent,
+    InventoryComponent,
+    SalesComponent,
+    TransferComponent,
+    AdminComponent,
+    RolesComponent,
+  },
 
-      },
-    components: {
-            HomeComponent,
-            branchStatComponent,
-            storeStatComponent,
-            BranchCrud,
-            StoreCrud,
-            ProductsComponent,
-            InventoryComponent,
-            SalesComponent,
-            TransferComponent,
-            AdminComponent,
-            // MessageComponent,
-            // GroupsComponent,
-            // CreateComponent,
-            // Register,
-            // FellowshipComponent,
-            // Member,
-            // RoleComponent,
-            // ServicesComponent,
-            // AttendanceComponent,
-            // OffertoryComponent,
-            // TitheComponent,
-            // TitheCRUD,
-        },
-    watch: {
-
-    },
-
-    created() {
-    },
-    directives: {
+  directives: {
     'click-outside': {
       mounted(el, binding) {
         el.clickOutsideEvent = function(event) {
@@ -1000,177 +784,178 @@
       }
     }
   },
-      methods: {
-        ...mapActions(useCounterStore, ['fetchAdminRoles', 'fetchBranches', 'fetchStores', 'fetchProducts',
-        'fetchInventories', 'fetchSales', 'fetchTransfers', 'fetchRoles']),
 
-         toggleFinanceMenu() {
-          this.isFinanceMenuOpen = !this.isFinanceMenuOpen;
-         },
-         onInputChange() {
-            this.setSearchQuery(this.searchQuery);
-            this.fetchMembers();
-            },
-        mobileHome() {
-            this.currentView = 'HomeComponent';
-            this.closeSideMenu();
-        },
-        mobileAdministrator() {
-            this.currentView = 'AdminComponent';
-            this.closeSideMenu();
-        },
-        mobileServices() {
-            this.currentView = 'ServicesComponent';
-            this.closeSideMenu();
-        },
-        mobileAttendance() {
-            this.currentView = 'AttendanceComponent';
-            this.closeSideMenu();
-        },
-        mobilePosition() {
-            this.currentView = 'RoleComponent';
-            this.closeSideMenu();
-        },
-        mobileFellowship () {
-            this.currentView = 'FellowshipComponent';
-            this.closeSideMenu();
-        },
-        mobileCreate() {
-            this.currentView = 'CreateComponent';
-            this.closeSideMenu();
-        },
-        mobileMessage() {
-            this.currentView = 'MessageComponent';
-            this.closeSideMenu();
-        },
-        mobileGroups() {
-            this.currentView = 'GroupsComponent';
-            this.closeSideMenu();
-        },
-        mobileRegister() {
-            this.currentView = 'Register';
-            this.closeSideMenu();
-        },
-        mobileMember() {
-            this.currentView = 'Member';
-            this.closeSideMenu();
-        },
-        mobileTithes() {
-            this.currentView = 'TitheComponent';
-            this.closeSideMenu();
-        },
-        mobileOffertory() {
-            this.currentView = 'OffertoryComponent';
-            this.closeSideMenu();
-        },
-        toggleTheme() {
-          this.dark = !this.dark;
-        },
-        toggleSettingsMenu() {
-            this.isSettingsMenuOpen = !this.isSettingsMenuOpen;
-        },
-        profile() {
-            try {
-                window.location.href = '/profile';
-            } catch(error) {
-                console.error('Error getting to profile', error);
-            }
-        },
-        async logOut() {
-            try {
-                await axios.post('/logout');
-                window.location.href = '/login';
-            } catch(error) {
-                console.error('Error logging out', error);
-            }
-        },
-        toggleSideMenu() {
-          this.isSideMenuOpen = !this.isSideMenuOpen;
-        },
-        closeSideMenu() {
-          this.isSideMenuOpen = false;
-        },
-        toggleNotificationsMenu() {
-          this.isNotificationsMenuOpen = !this.isNotificationsMenuOpen;
-        },
-        closeNotificationsMenu() {
-          this.isNotificationsMenuOpen = false;
-        },
-        toggleProfileMenu() {
-          this.isProfileMenuOpen = !this.isProfileMenuOpen;
-        },
-        closeProfileMenu() {
-          this.isProfileMenuOpen = false;
-        },
-        togglePagesMenu() {
-          this.isPagesMenuOpen = !this.isPagesMenuOpen;
-        },
-        openModal() {
-          this.isModalOpen = true;
-          this.trapCleanup = this.focusTrap(document.querySelector('#modal'));
-        },
-        closeModal() {
-          this.isModalOpen = false;
-          if (this.trapCleanup) {
-            this.trapCleanup();
-          }
-        },
-        beforeLeave(el) {
-            el.style.opacity = 1;
-            },
-        leave(el, done) {
-            el.style.transition = 'opacity 150ms ease-in-out';
-            el.style.opacity = 0;
-            done();
-            },
-        closeNotificationsMenu() {
-            this.isNotificationsMenuOpen = false;
-            },
-        beforeEnter(el) {
-            el.style.opacity = 0;
-            el.style.transform = 'translateX(-20px)';
-            },
-        enter(el, done) {
-            el.offsetHeight;
-            el.style.transition = 'opacity 150ms ease-in-out, transform 150ms ease-in-out';
-            el.style.opacity = 1;
-            el.style.transform = 'translateX(0)';
-            done();
-            },
-        focusTrap(element) {
-          // Implement your focusTrap logic here or use a library like tabbable or focus-trap
-        },
-      },
-      provide() {
-        return {
-            darkMode: this.dark,
-        };
-      },
+  data() {
+    return {
+      dark: false,
+      isSideMenuOpen: false,
+      isNotificationsMenuOpen: false,
+      isProfileMenuOpen: false,
+      isPagesMenuOpen: false,
+      isModalOpen: false,
+      trapCleanup: null,
+      isSettingsMenuOpen: false,
+      isFinanceMenuOpen: false,
+      openBranch: null,
+      openStore: null,
     };
-    </script>
+  },
+
+  computed: {
+    ...mapState(useCounterStore, ['Roles', 'branches', 'stores']),
+    ...mapWritableState(useCounterStore, ['searchQuery', 'currentView']),
+
+    hasBranchRole() {
+        return this.Roles.some(role => /^branch\d+$/.test(role));
+    },
+
+    hasStoreRole() {
+        return this.Roles.some(role => /^store\d+$/.test(role));
+    },
+  },
+
+  mounted() {
+    this.fetchAdminRoles();
+    this.fetchBranches();
+    this.fetchStores();
+    this.fetchProducts();
+    this.fetchInventories();
+    this.fetchSales();
+    this.fetchTransfers();
+    this.fetchRoles();
+  },
+
+  methods: {
+    ...mapActions(useCounterStore, [
+      'fetchAdminRoles',
+      'fetchBranches',
+      'fetchStores',
+      'fetchProducts',
+      'fetchInventories',
+      'fetchSales',
+      'fetchTransfers',
+      'fetchRoles'
+    ]),
+
+    // Store and Branch Methods
+    toggleBranchMenu(branchId) {
+      this.openBranch = this.openBranch === branchId ? null : branchId;
+      this.openStore = null;
+    },
+
+    toggleStoreMenu(storeId) {
+      this.openStore = this.openStore === storeId ? null : storeId;
+    },
+
+    filteredStores(branchId) {
+      return this.stores.filter(store => store.branch_id === branchId);
+    },
+
+    // View Methods
+    viewInventory(storeId) {
+      this.currentView = 'InventoryComponent';
+      this.$emit('select-store', storeId);
+    },
+
+    viewSales(storeId) {
+      this.currentView = 'SalesComponent';
+      this.$emit('select-store', storeId);
+    },
+
+    viewTransfers(storeId) {
+      this.currentView = 'TransferComponent';
+      this.$emit('select-store', storeId);
+    },
+
+    // Menu Toggle Methods
+    toggleTheme() {
+      this.dark = !this.dark;
+    },
+
+    toggleSettingsMenu() {
+      this.isSettingsMenuOpen = !this.isSettingsMenuOpen;
+    },
+    profile() {
+        try {
+            window.location.href = '/profile';
+        } catch(error) {
+            console.error('Error getting to profile', error);
+        }
+    },
+    async logOut() {
+      try {
+        await axios.post('/logout');
+        window.location.href = '/login';
+      } catch(error) {
+        console.error('Error logging out', error);
+      }
+    },
+    toggleSideMenu() {
+        this.isSideMenuOpen = !this.isSideMenuOpen;
+    },
+    closeSideMenu() {
+        this.isSideMenuOpen = false;
+    },
+    toggleNotificationsMenu() {
+        this.isNotificationsMenuOpen = !this.isNotificationsMenuOpen;
+    },
+    closeNotificationsMenu() {
+        this.isNotificationsMenuOpen = false;
+    },
+    toggleProfileMenu() {
+        this.isProfileMenuOpen = !this.isProfileMenuOpen;
+    },
+    closeProfileMenu() {
+        this.isProfileMenuOpen = false;
+    },
+    togglePagesMenu() {
+        this.isPagesMenuOpen = !this.isPagesMenuOpen;
+    },
+    openModal() {
+        this.isModalOpen = true;
+        this.trapCleanup = this.focusTrap(document.querySelector('#modal'));
+    },
+    closeModal() {
+        this.isModalOpen = false;
+        if (this.trapCleanup) {
+            this.trapCleanup();
+        }
+    },
+    closeNotificationsMenu() {
+        this.isNotificationsMenuOpen = false;
+    },
+  },
+
+  provide() {
+    return {
+      darkMode: this.dark,
+    };
+  },
+};
+</script>
 
 <style>
 @import '../../css/app.css';
 @import '../../css/tailwind.output.css';
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 150ms ease-in;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-.slide-fade-enter-active, .slide-fade-leave-active {
-    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
-}
-.slide-fade-enter, .slide-fade-leave-to {
-    opacity: 0;
-    transform: translateX(-20px);
-}
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 150ms ease-in-out;
+  transition: opacity 150ms ease-in;
 }
-.fade-enter, .fade-leave-to {
+
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 </style>

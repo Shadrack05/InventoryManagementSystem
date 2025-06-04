@@ -19,15 +19,11 @@ class StockController extends Controller
     public function create(Request $request) {
         try {
 
-            $store = Store::with(['branch'])->findOrFail($request->storeId);
-            $branchId = $store->branch->id;
-
             Stock::create([
                 'product_id' => $request->productId,
                 'quantity' => $request->quantity,
                 'price' => $request->price,
                 'store_id' => $request->storeId,
-                'branch_id' => $branchId,
             ]);
 
             return response()->json(['success' => 'Stock created successfully.'], 200);
@@ -39,13 +35,11 @@ class StockController extends Controller
     public function update(Request $request, $id) {
         try {
             $stock = Stock::findOrFail($id);
-            $store = Store::with(['branch'])->findOrFail($request->store_id);
-            $branchId = $store->branch->id;
+
             $stock->update([
                 'quantity' => $request->quantity,
                 'price' => $request->price,
                 'store_id' => $request->store_id,
-                'branch_id' => $branchId,
                 'product_id' => $request->product_id,
             ]);
             return response()->json(['success' => 'Stock updated successfully.'], 200);

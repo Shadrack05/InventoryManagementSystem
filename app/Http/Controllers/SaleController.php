@@ -44,15 +44,11 @@ class SaleController extends Controller
                 'quantity' => $stock->quantity - $request->quantity
             ]);
 
-            $store = Store::with(['branch'])->findOrFail($request->storeId);
-            $branchId = $store->branch->id;
-
             Sale::create([
                 'product_id' => $request->productId,
                 'store_id' => $request->storeId,
                 'quantity' => $request->quantity,
                 'sold_at' => $request->soldAt,
-                'branch_id' => $branchId,
             ]);
 
             // Commit transaction
@@ -107,21 +103,12 @@ class SaleController extends Controller
                 'quantity' => $stock->quantity - $quantityDifference
             ]);
 
-            // Get branch ID if store is being updated
-            if ($request->store_id && $request->store_id !== $sale->store_id) {
-                $store = Store::with(['branch'])->findOrFail($request->storeId);
-                $branchId = $store->branch->id;
-            } else {
-                $branchId = $sale->branch_id;
-            }
-
             // Update the sale
             $sale->update([
                 'product_id' => $request->productId ?? $sale->product_id,
                 'store_id' => $request->storeId ?? $sale->store_id,
                 'quantity' => $request->quantity ?? $sale->quantity,
                 'sold_at' => $request->sold_at ?? $sale->sold_at,
-                'branch_id' => $branchId,
             ]);
 
             // Commit transaction

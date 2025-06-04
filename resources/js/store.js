@@ -11,6 +11,7 @@ export const useCounterStore = defineStore('counter', {
             Roles: [],
             roles: [],
             admins: [],
+            branch: [],
             branches: [],
             stores: [],
             products: [],
@@ -28,7 +29,7 @@ export const useCounterStore = defineStore('counter', {
                 this.user = response.data.user.name;
                 this.Roles= response.data.roles;
 
-                for (const role of Roles) {
+                for (const role of this.Roles) {
                     if (role === 'admin') {
                         this.currentView = 'HomeComponent'
                         return
@@ -60,22 +61,10 @@ export const useCounterStore = defineStore('counter', {
                 console.error('Error fetching user:', error);
             }
         },
-        // async fetchAdminRoles() {
-        //     try {
-        //         const response = await axios.get('/api/user-role');
-        //         this.Roles = response.data.roles;
-        //         console.log('Roles fetched successfully:', this.Roles);
-        //     } catch (error) {
-        //         console.error('Error fetching roles:', error);
-
-        //     }
-
-        // },
         async loadBranchData(branchId) {
             try {
                 const response = await axios.get(`/api/branch-statistics/${branchId}`);
                 this.branch = response.data;
-                console.log('Branch data loaded successfully:', this.branch);
             } catch (error) {
                 console.error('Error loading branch data:', error);
             }
@@ -85,7 +74,6 @@ export const useCounterStore = defineStore('counter', {
             try {
                 const response = await axios.get(`/api/store-statistics/${storeId}`);
                 this.storeStatistics = response.data;
-                console.log('Store data loaded successfully:', this.storeStatistics);
             } catch (error) {
                 console.error('Error loading store data:', error);
             }
@@ -376,11 +364,6 @@ export const useCounterStore = defineStore('counter', {
         try {
             const response = await axios.get('api/stores');
             this.stores = response.data;
-            // this.currentPageOffertory = response.data.current_page;
-            // this.lastPageOffertory= response.data.last_page;
-            // this.totalOffertory = response.data.total;
-            // this.fromOffertory = response.data.from;
-            // this.toOffertory = response.data.to;
         } catch (error) {
             let errorMessage = "An unexpected error occurred.";
 
@@ -857,6 +840,91 @@ export const useCounterStore = defineStore('counter', {
                 timer: 1500
             });
             this.fetchInventories();
+            return response;
+        } catch (error) {
+            let errorMessage = "An unexpected error occurred.";
+
+            if (error.response && error.response.data) {
+              const errorData = error.response.data;
+              errorMessage = errorData.message || errorMessage;
+            }
+
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: errorMessage,
+            });
+            throw error;
+        }
+      },
+    async addPosition(position) {
+        try {
+        const response = await axios.post('api/create-position', position);
+        this.message = response.success;
+        this.error = response.error;
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Your Position has been saved",
+            showConfirmButton: false,
+            timer: 1500
+        });
+        return response;
+        } catch (error) {
+            let errorMessage = "An unexpected error occurred.";
+
+            if (error.response && error.response.data) {
+              const errorData = error.response.data;
+              errorMessage = errorData.message || errorMessage;
+            }
+
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: errorMessage,
+            });
+            throw error;
+        }
+      },
+      async editPosition(positionId, position) {
+        try {
+            const response = await axios.post(`api/edit-position/${positionId}`, position);
+            this.message = response;
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your Position has been Edited",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return response;
+        } catch (error) {
+            let errorMessage = "An unexpected error occurred.";
+
+            if (error.response && error.response.data) {
+              const errorData = error.response.data;
+              errorMessage = errorData.message || errorMessage;
+            }
+
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: errorMessage,
+            });
+            throw error;
+        }
+      },
+      async removeRole(positionId) {
+        try {
+            const response = await axios.delete(`api/delete-position/${positionId}`);
+            this.message = response;
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Position has been removed",
+                showConfirmButton: false,
+                timer: 1500
+            });
             return response;
         } catch (error) {
             let errorMessage = "An unexpected error occurred.";

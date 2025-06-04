@@ -51,14 +51,10 @@ class TransferController extends Controller
                 'quantity' => $request->quantity,
             ]);
 
-            $store = Store::with(['branch'])->findOrFail($request->toStoreId);
-            $branchId = $store->branch->id;
-
             Stock::updateOrCreate(
                 [
                     'product_id' => $request->productId,
                     'store_id' => $request->toStoreId,
-                    'branch_id' => $branchId,
                     'price' => $stock->price
                 ],
                 [
@@ -117,15 +113,11 @@ class TransferController extends Controller
                 'quantity' => $fromStock->quantity - $quantityDifference
             ]);
 
-            $store = Store::with(['branch'])->findOrFail($request->toStoreId);
-            $branchId = $store->branch->id;
-
             // Find or create destination store stock
             $toStock = Stock::firstOrCreate(
                 [
                     'product_id' => $transfer->product_id,
                     'store_id' => $request->toStoreId,
-                    'branch_id' => $branchId,
                 ],
                 [
                     'quantity' => 0,

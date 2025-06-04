@@ -23,6 +23,7 @@ class BranchController extends Controller
 
             Role::create([
                 'name' => 'branch' . $branch->id,
+                'guard_name' => 'web',
             ]);
 
             return response()->json(['success' => 'Branch created successfully.'], 200);

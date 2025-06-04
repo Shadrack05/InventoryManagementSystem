@@ -24,6 +24,7 @@ class StoreController extends Controller
 
             Role::create([
                 'name' => 'store' . $store->id,
+                'guard_name' => 'web',
             ]);
 
         return response()->json(['success' => 'Store recorded successfully.'], 200);

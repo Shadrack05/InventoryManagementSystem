@@ -51,30 +51,26 @@
         <p
           class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
         >
-          Assign Role to {{ admin.name }}
+          Edit Position
         </p>
         <!-- Modal description -->
-        <label class="block mt-4 text-sm mb-3">
-            <span class="text-gray-700 dark:text-gray-400">
-                Roles
-            </span>
-            <select
-                multiple
-                class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-multiselect focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
-                v-model="rolesArray"
-            >
-                <option
-                    v-for="option in roles"
-                    :value="option.name"
-                    :key="option.id"
-                >
-                    {{ option.name }}
-                </option>
-            </select>
-            <p class="mt-1 text-xs text-gray-500">
-                Hold Ctrl/Cmd to select multiple roles
-            </p>
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Name</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="transformers"
+            v-model="position.name"
+          />
         </label>
+
+        <!-- <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Description</span>
+          <textarea
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="youth position"
+            v-model="position.description"
+          />
+        </label> -->
 
       </div>
       <footer
@@ -88,15 +84,9 @@
         </button> -->
         <button
           class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-          @click="updateAdmin"
+          @click="updatePosition"
         >
-        <span v-if="isLoading">
-            <svg class="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
-              <path class="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8H4z"></path>
-            </svg>
-          </span>
-          <span v-else>Assign Role</span>
+          Edit Position
         </button>
       </footer>
     </div>
@@ -117,48 +107,41 @@ export default {
       type: Boolean,
       default: false
     },
-    adminData: {
+    positionData: {
       type: Object,
       required: true
     }
     },
     data() {
         return {
-            admin: { ...this.adminData },
-            isLoading: false,
-            rolesArray: [],
+            position: { ...this.positionData },
         };
-    },
-    computed: {
-        ...mapState(useCounterStore, ['roles']),
     },
     mounted () {
         //
-
     },
     created () {
         //
     },
     watch: {
-        adminData: {
-            handler(newAdmin) {
-                this.admin = { ...newAdmin };
-                this.rolesArray = newAdmin.roles?.map(role => role.name) || [];
+        positionData: {
+            handler(newPosition) {
+            this.position = { ...newPosition };
             },
             deep: true,
             immediate: true
         }
     },
     methods: {
-        ...mapActions(useCounterStore, ['editAdmin']),
+        ...mapActions(useCounterStore, ['editPosition']),
 
     closeModal() {
       this.$emit('closeEdit');
     },
-    async updateAdmin() {
+    async updatePosition() {
         Swal.fire({
         title: "Are you sure?",
-        text: "Do you want to edit admin",
+        text: "Do you want to edit position",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -166,17 +149,14 @@ export default {
         confirmButtonText: "Yes, update it!"
         }).then((result) => {
         if (result.isConfirmed) {
-            let adminId = this.admin.id;
-            this.admin.rolesArray = this.rolesArray;
+            let positionId = this.position.id;
             try {
-                this.isLoading = true;
-                this.editAdmin(adminId, this.admin);
+                this.editPosition(positionId, this.position);
             } catch (error) {
-                console.error('Error editing admin', error);
+                console.error('Error editing position', error);
             } finally {
                 this.$emit('edit');
                 this.closeModal();
-                this.isLoading = false;
             }
         }
         });
