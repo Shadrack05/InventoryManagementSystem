@@ -26,6 +26,7 @@ export const useCounterStore = defineStore('counter', {
     actions: {
         async fetchAdminRoles() {
             try {
+                await axios.get('/sanctum/csrf-cookie');
                 const response = await axios.get('/api/user-role');
 
                 this.user = response.data.user.name;
@@ -260,6 +261,7 @@ export const useCounterStore = defineStore('counter', {
             showConfirmButton: false,
             timer: 1500
         });
+        this.fetchRoles();
         return response;
         } catch (error) {
             let errorMessage = "An unexpected error occurred.";
@@ -316,6 +318,7 @@ export const useCounterStore = defineStore('counter', {
                 showConfirmButton: false,
                 timer: 1500
             });
+            this.fetchRoles();
             return response;
         } catch (error) {
             let errorMessage = "An unexpected error occurred.";
@@ -345,6 +348,7 @@ export const useCounterStore = defineStore('counter', {
             showConfirmButton: false,
             timer: 1500
         });
+        this.fetchRoles();
         return response;
         } catch (error) {
             let errorMessage = "An unexpected error occurred.";
@@ -420,6 +424,7 @@ export const useCounterStore = defineStore('counter', {
                 showConfirmButton: false,
                 timer: 1500
             });
+            this.fetchRoles();
             return response;
         } catch (error) {
             let errorMessage = "An unexpected error occurred.";

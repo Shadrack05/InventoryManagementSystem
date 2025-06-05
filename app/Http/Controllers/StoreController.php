@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\StoreRequest;
 use App\Http\Requests\UpdateStoreRequest;
+use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
 {
@@ -51,15 +52,38 @@ class StoreController extends Controller
         }
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         try {
+            DB::beginTransaction();
+
             $store = Store::findOrFail($id);
+
+            // Check and delete associated role
+            $roleName = 'store' . $id;
+            $role = Role::where('name', $roleName)->first();
+
+            if ($role) {
+                // Remove role from any users that have it
+                $role->users()->detach();
+                // Delete the role
+                $role->delete();
+            }
+
+            // Delete the store
             $store->delete();
 
-            return response()->json(['success' => 'Store deleted successfully.'], 200);
+            DB::commit();
+
+            return response()->json([
+                'success' => 'Store and associated role deleted successfully.'
+            ], 200);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to delete store: ' . $e->getMessage()], 500);
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Failed to delete store: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

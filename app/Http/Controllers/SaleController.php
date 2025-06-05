@@ -69,7 +69,7 @@ class SaleController extends Controller
         }
     }
 
-    public function update(SaleRequest $request, $id)
+    public function update(Request $request, $id)
     {
         try {
             DB::beginTransaction();

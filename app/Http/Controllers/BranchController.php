@@ -7,6 +7,7 @@ use App\Http\Requests\updateBranchRequest;
 use App\Models\Branch;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
 
 class BranchController extends Controller
 {
@@ -52,12 +53,35 @@ class BranchController extends Controller
     public function destroy($id)
     {
         try {
+            DB::beginTransaction();
+
             $branch = Branch::findOrFail($id);
+
+            // Check and delete associated role
+            $roleName = 'branch' . $id;
+            $role = Role::where('name', $roleName)->first();
+
+            if ($role) {
+                // Remove role from any users that have it
+                $role->users()->sync([]);
+                $role->delete();
+            }
+
+            // Delete the branch
             $branch->delete();
 
-            return response()->json(['success' => 'Branch deleted Succesful'], 200);
+            DB::commit();
+
+            return response()->json([
+                'success' => 'Branch and associated role deleted successfully'
+            ], 200);
+
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error Deleting Branch', $e->getMessage()], 500);
+            DB::rollBack();
+
+            return response()->json([
+                'error' => 'Error deleting branch: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

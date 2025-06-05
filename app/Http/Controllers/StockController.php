@@ -50,7 +50,7 @@ class StockController extends Controller
             ], 500);
         }
     }
-    public function update(StockRequest $request, $id) {
+    public function update(Request $request, $id) {
         try {
             $stock = Stock::findOrFail($id);
 

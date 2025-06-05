@@ -80,7 +80,7 @@ class TransferController extends Controller
         }
     }
 
-    public function update(TransferRequest $request, $id) {
+    public function update(Request $request, $id) {
         try {
             DB::beginTransaction();
 
