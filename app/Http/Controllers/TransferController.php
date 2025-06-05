@@ -126,6 +126,14 @@ class TransferController extends Controller
                 ]
             );
 
+            // Check if destination store will have negative stock
+            if ($quantityDifference < 0 && abs($quantityDifference) > $toStock->quantity) {
+                return response()->json([
+                    'error' => 'Insufficient stock in destination store. Available: ' . $toStock->quantity,
+                    'available' => $toStock->quantity
+                ], 400);
+            }
+
             // Update destination store stock
             $toStock->update([
                 'quantity' => $toStock->quantity + $quantityDifference
@@ -182,6 +190,14 @@ class TransferController extends Controller
                            ->first();
 
             if ($toStock) {
+            // Check if removing transfer would cause negative stock
+                if ($toStock->quantity < $transfer->quantity) {
+                    return response()->json([
+                        'error' => 'Cannot delete transfer: Destination store has insufficient stock. Available: ' . $toStock->quantity,
+                        'available' => $toStock->quantity
+                    ], 400);
+                }
+
                 $toStock->update([
                     'quantity' => $toStock->quantity - $transfer->quantity
                 ]);
