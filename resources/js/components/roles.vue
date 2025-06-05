@@ -107,6 +107,12 @@ import { useCounterStore } from '../store.js';
 
 
 export default {
+    props: {
+        storeId: {
+            type: Number,
+            required: false
+        }
+    },
     data() {
         return {
             isModalOpen: false,

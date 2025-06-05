@@ -677,12 +677,17 @@
   import Swal from 'sweetalert2';
   import 'sweetalert2/src/sweetalert2.scss';
   import { useCounterStore } from '../store.js';
-  import { mapState, mapWritableState } from 'pinia';
+  import { mapWritableState } from 'pinia';
   import { mapActions } from 'pinia';
-//   import ChartComponent from './chartComponent.vue';
 
   export default {
     inject: ['darkMode'],
+    props: {
+        storeId: {
+            type: Number,
+            required: false
+        }
+    },
     data () {
         return {
             totalSalesToday: null,
@@ -695,7 +700,7 @@
         ...mapWritableState(useCounterStore, ['Roles']),
     },
     components: {
-        // ChartComponent,
+        //
     },
     mounted() {
     this.getStatistics();
@@ -714,7 +719,7 @@
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
-                    text: "error in fetching church metrics",
+                    text: "error in fetching inventory metrics",
                 });
             }
         },

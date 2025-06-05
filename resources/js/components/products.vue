@@ -8,7 +8,7 @@
           </p>
 
         <div class="flex items-center space-x-8 mt-2 mb-2">
-            <button class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+            <button v-if="Roles.includes('admin')" class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                 @click="openCreateProduct()"
                 >
                     + Add Product
@@ -23,7 +23,7 @@
                 <th class="px-4 py-3">Name</th>
                 <th class="px-4 py-3">SKU</th>
                 <th class="px-4 py-3">Description</th>
-                <th class="px-4 py-3">Actions</th>
+                <th v-if="Roles.includes('admin')" class="px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody
@@ -44,7 +44,7 @@
                 <td class="px-4 py-3 text-sm">
                     {{ product.description }}
                 </td>
-                <td class="px-4 py-3">
+                <td v-if="Roles.includes('admin')" class="px-4 py-3">
                     <div class="flex items-center space-x-4 text-sm">
                       <button
                         class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
@@ -121,6 +121,12 @@ export default {
             alertType: ''
         };
     },
+    props: {
+        storeId: {
+            type: Number,
+            required: false
+        }
+    },
     mounted () {
         // this.fetchProducts();
     },
@@ -129,7 +135,7 @@ export default {
         EditProductModal
     },
     computed: {
-        ...mapState(useCounterStore, ['products', 'message', 'error']),
+        ...mapState(useCounterStore, ['products', 'Roles']),
     },
     methods: {
         ...mapActions(useCounterStore, ['addProduct','fetchProducts', 'removeProduct']),

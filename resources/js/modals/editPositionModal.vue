@@ -1,9 +1,6 @@
 <template>
     <transition
     name="fade"
-    @before-enter="beforeEnter"
-    @enter="enter"
-    @leave="leave"
   >
     <div
     v-if="editVisible"
@@ -12,9 +9,6 @@
     <!-- Modal -->
     <transition
     name="fade"
-    @before-enter="beforeEnter"
-    @enter="enter"
-    @leave="leave"
   >
     <div
       v-if="editVisible"
@@ -62,26 +56,10 @@
             v-model="position.name"
           />
         </label>
-
-        <!-- <label class="block text-sm">
-          <span class="text-gray-700 dark:text-gray-400">Description</span>
-          <textarea
-            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-            placeholder="youth position"
-            v-model="position.description"
-          />
-        </label> -->
-
       </div>
       <footer
         class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800"
       >
-        <!-- <button
-          @click="closeModal"
-          class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-        >
-          Close
-        </button> -->
         <button
           class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
           @click="updatePosition"
@@ -98,7 +76,7 @@
 <script>
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
-import { mapState, mapActions } from 'pinia';
+import { mapActions } from 'pinia';
 import { useCounterStore } from '../store';
 
 export default {
@@ -161,31 +139,7 @@ export default {
         }
         });
     },
-    beforeLeave(el) {
-        el.style.opacity = 1;
-    },
-    leave(el, done) {
-        el.style.transition = 'opacity 150ms ease-in-out';
-        el.style.opacity = 0;
-    done();
-    },
-    closeNotificationsMenu() {
-        this.isNotificationsMenuOpen = false;
-    },
-    beforeEnter(el) {
-        el.style.opacity = 0;
-        el.style.transform = 'translateX(-20px)';
-    },
-    enter(el, done) {
-         el.offsetHeight; // Trigger reflow to apply transition
-        el.style.transition = 'opacity 150ms ease-in-out, transform 150ms ease-in-out';
-        el.style.opacity = 1;
-        el.style.transform = 'translateX(0)';
-            done();
-    },
-        focusTrap(element) {
-          // Implement your focusTrap logic here or use a library like tabbable or focus-trap
-        },
+
   },
   directives: {
     'click-outside': {

@@ -135,7 +135,7 @@ export default {
         }
     },
     mounted () {
-        // this.fetchTransfers();
+        //
     },
     components: {
         CreateTransferModal,

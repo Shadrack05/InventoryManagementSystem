@@ -124,16 +124,18 @@
   </template>
 
 <script>
-  import axios from 'axios';
-  import Swal from 'sweetalert2';
   import 'sweetalert2/src/sweetalert2.scss';
   import { useCounterStore } from '../store.js';
-  import { mapState, mapWritableState } from 'pinia';
-  import { mapActions } from 'pinia';
-//   import ChartComponent from './chartComponent.vue';
+  import { mapWritableState } from 'pinia';
 
   export default {
     inject: ['darkMode'],
+    props: {
+        storeId: {
+            type: Number,
+            required: false
+        }
+    },
     data () {
         return {
             totalSalesToday: null,
@@ -155,7 +157,6 @@
 
     },
     components: {
-        // ChartComponent,
     },
     mounted() {
     },

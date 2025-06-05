@@ -112,6 +112,12 @@ import { useCounterStore } from '../store.js';
 
 
 export default {
+    props: {
+        storeId: {
+            type: Number,
+            required: false
+        }
+    },
     data() {
         return {
             isModalOpen: false,
@@ -122,14 +128,13 @@ export default {
         };
     },
     mounted () {
-        // this.fetchbranchs();
     },
     components: {
         CreateBranchModal,
         EditBranchModal
     },
     computed: {
-        ...mapState(useCounterStore, ['branches', 'message', 'error']),
+        ...mapState(useCounterStore, ['branches']),
     },
     methods: {
         ...mapActions(useCounterStore, ['addBranch','fetchBranches', 'removeBranch']),

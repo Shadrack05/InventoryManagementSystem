@@ -134,6 +134,12 @@
 
   export default {
     inject: ['darkMode'],
+    props: {
+        storeId: {
+            type: Number,
+            required: false
+        }
+    },
     data () {
         return {
             totalSalesToday: null,
@@ -169,7 +175,7 @@
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
-                    text: "error in fetching church metrics",
+                    text: "error in fetching inventory metrics",
                 });
             }
         },

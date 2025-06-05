@@ -61,9 +61,6 @@
             <span v-if="emailCheck" class="text-xs text-red-600 dark:text-red-400">
                 {{ emailError }}
               </span>
-              <!-- <span v-if="showValidation && phoneLength === 9" class="text-xs text-green-600 dark:text-green-400">
-                valid length.
-              </span> -->
           </label>
 
           <label class="block text-sm mb-3">
@@ -77,9 +74,6 @@
             <span v-if="passwordCheck" class="text-xs text-red-600 dark:text-red-400">
                 {{ passwordError }}
               </span>
-              <!-- <span v-if="showValidation && phoneLength === 9" class="text-xs text-green-600 dark:text-green-400">
-                valid length.
-              </span> -->
           </label>
 
           <label class="block text-sm mb-3">
@@ -116,12 +110,6 @@
       <footer
         class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800"
       >
-        <!-- <button
-          @click="closeModal"
-          class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-        >
-          Close
-        </button> -->
         <button
           class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
           @click="submitForm"
@@ -284,31 +272,7 @@ export default {
         console.error('Error creating admin:', error);
         }
     },
-    beforeLeave(el) {
-            el.style.opacity = 1;
-            },
-        leave(el, done) {
-            el.style.transition = 'opacity 150ms ease-in-out';
-            el.style.opacity = 0;
-            done();
-            },
-        closeNotificationsMenu() {
-            this.isNotificationsMenuOpen = false;
-            },
-        beforeEnter(el) {
-            el.style.opacity = 0;
-            el.style.transform = 'translateX(-20px)';
-            },
-        enter(el, done) {
-            el.offsetHeight; // Trigger reflow to apply transition
-            el.style.transition = 'opacity 150ms ease-in-out, transform 150ms ease-in-out';
-            el.style.opacity = 1;
-            el.style.transform = 'translateX(0)';
-            done();
-            },
-        focusTrap(element) {
-          // Implement your focusTrap logic here or use a library like tabbable or focus-trap
-        },
+
   },
   watch: {
   },

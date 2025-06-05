@@ -83,7 +83,7 @@
 <script>
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
-import { mapState, mapActions } from 'pinia';
+import { mapActions } from 'pinia';
 import { useCounterStore } from '../store';
 
 export default {

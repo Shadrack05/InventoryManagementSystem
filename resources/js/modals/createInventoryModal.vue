@@ -113,8 +113,6 @@
 </template>
 
 <script>
-import Swal from 'sweetalert2';
-import 'sweetalert2/src/sweetalert2.scss';
 import { useCounterStore } from '../store';
 import { mapActions, mapState } from 'pinia';
 
@@ -178,31 +176,6 @@ export default {
         this.productId = null;
         this.storeId = null;
     },
-    beforeLeave(el) {
-            el.style.opacity = 1;
-            },
-        leave(el, done) {
-            el.style.transition = 'opacity 150ms ease-in-out';
-            el.style.opacity = 0;
-            done();
-            },
-        closeNotificationsMenu() {
-            this.isNotificationsMenuOpen = false;
-            },
-        beforeEnter(el) {
-            el.style.opacity = 0;
-            el.style.transform = 'translateX(-20px)';
-            },
-        enter(el, done) {
-            el.offsetHeight; // Trigger reflow to apply transition
-            el.style.transition = 'opacity 150ms ease-in-out, transform 150ms ease-in-out';
-            el.style.opacity = 1;
-            el.style.transform = 'translateX(0)';
-            done();
-            },
-        focusTrap(element) {
-          // Implement your focusTrap logic here or use a library like tabbable or focus-trap
-        },
   },
   watch: {
   },
