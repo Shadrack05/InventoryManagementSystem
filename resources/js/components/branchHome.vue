@@ -58,7 +58,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ branch.topProduct.name }}
+              {{ branch.topProduct?.name || 'NA' }}
             </p>
           </div>
         </div>
@@ -84,7 +84,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ branch.leastProduct.name }}
+              {{ branch.leastProduct?.name || 'NA' }}
             </p>
           </div>
         </div>

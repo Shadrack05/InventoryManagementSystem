@@ -58,7 +58,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ storeStatistics.today.topProduct?.name || 'N/A' }}
+              {{ storeStatistics?.today?.topProduct?.name || 'N/A' }}
             </p>
           </div>
         </div>
@@ -84,7 +84,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ storeStatistics.today.leastProduct?.name || 'N/A' }}
+              {{ storeStatistics?.today?.leastProduct?.name || 'N/A' }}
             </p>
           </div>
         </div>
@@ -112,7 +112,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              {{ storeStatistics.today?.totalTransfers || 0 }}
+              {{ storeStatistics?.today?.totalTransfers || 0 }}
             </p>
           </div>
         </div>
