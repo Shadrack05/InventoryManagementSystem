@@ -32,7 +32,7 @@
               class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
             >
               <tr class="text-gray-700 dark:text-gray-400"
-              v-for="transfer in transfers" :key="transfer.id">
+              v-for="transfer in filteredTransfers" :key="transfer.id">
                 <td class="px-4 py-3">
                   <div class="flex items-center text-sm">
                     <div>
@@ -125,9 +125,14 @@ export default {
             isModalOpen: false,
             selectedTransfer: {},
             editModal: false,
-            alertMessage:'',
-            alertType: ''
+            filteredTransfers: [],
         };
+    },
+    props: {
+        storeId: {
+            type: Number,
+            required: false
+        }
     },
     mounted () {
         // this.fetchTransfers();
@@ -137,7 +142,7 @@ export default {
         EditTransferModal
     },
     computed: {
-        ...mapState(useCounterStore, ['transfers', 'message', 'error']),
+        ...mapState(useCounterStore, ['message', 'error', 'transfers']),
     },
     methods: {
         ...mapActions(useCounterStore, ['addTransfer','fetchTransfers', 'removeTransfer']),
@@ -176,11 +181,29 @@ export default {
         createTransfer () {
             this.fetchTransfers();
         },
+        filterTransfers(storeId) {
+            this.filteredTransfers = this.transfers.filter(i => i.from_store_id === storeId);
+        },
         closeModal() {
             this.isModalOpen = false;
             this.editModal = false;
         }
-    }
+    },
+    watch: {
+        storeId: {
+            immediate: true,
+            handler(newVal) {
+                this.filterTransfers(newVal);
+            }
+        },
+
+        transfers: {
+            deep: true,
+            handler() {
+                this.filterTransfers(this.storeId);
+            }
+        }
+    },
 
 }
 </script>

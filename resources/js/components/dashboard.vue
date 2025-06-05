@@ -727,7 +727,10 @@
         </div>
       </header>
       <main class="h-full overflow-y-auto bg-white dark:bg-gray-800">
-          <component :is="currentView"></component>
+          <component
+          :is="currentView"
+          :storeId="selectedStoreId"
+          ></component>
       </main>
     </div>
   </div>
@@ -785,9 +788,18 @@ export default {
     }
   },
 
+  props: {
+    csrfToken: String
+  },
+
+
   data() {
     return {
       dark: false,
+      allInventories: [],
+      allSales: [],
+      allTransfers: [],
+      selectedStoreId: null,
       isSideMenuOpen: false,
       isNotificationsMenuOpen: false,
       isProfileMenuOpen: false,
@@ -803,7 +815,7 @@ export default {
 
   computed: {
     ...mapState(useCounterStore, ['Roles', 'branches', 'stores']),
-    ...mapWritableState(useCounterStore, ['searchQuery', 'currentView']),
+    ...mapWritableState(useCounterStore, ['inventories', 'sales', 'transfers', 'currentView']),
 
     hasBranchRole() {
         return this.Roles.some(role => /^branch\d+$/.test(role));
@@ -812,6 +824,7 @@ export default {
     hasStoreRole() {
         return this.Roles.some(role => /^store\d+$/.test(role));
     },
+
   },
 
   mounted() {
@@ -852,19 +865,19 @@ export default {
     },
 
     // View Methods
-    viewInventory(storeId) {
-      this.currentView = 'InventoryComponent';
-      this.$emit('select-store', storeId);
+    async viewInventory(storeId) {
+        this.selectedStoreId = storeId;
+        this.currentView = 'InventoryComponent';
     },
 
-    viewSales(storeId) {
-      this.currentView = 'SalesComponent';
-      this.$emit('select-store', storeId);
+    async viewSales(storeId) {
+        this.selectedStoreId = storeId;
+        this.currentView = 'SalesComponent';
     },
 
-    viewTransfers(storeId) {
-      this.currentView = 'TransferComponent';
-      this.$emit('select-store', storeId);
+    async viewTransfers(storeId) {
+        this.selectedStoreId = storeId;
+        this.currentView = 'TransferComponent';
     },
 
     // Menu Toggle Methods

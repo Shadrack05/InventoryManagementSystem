@@ -32,7 +32,7 @@
               class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
             >
               <tr class="text-gray-700 dark:text-gray-400"
-              v-for="inventory in inventories" :key="inventory.id">
+              v-for="inventory in filteredInventories" :key="inventory.id">
                 <td class="px-4 py-3">
                   <div class="flex items-center text-sm">
                     <div>
@@ -126,18 +126,24 @@ export default {
             selectedInventory: {},
             editModal: false,
             alertMessage:'',
-            alertType: ''
+            alertType: '',
+            filteredInventories: [],
         };
     },
+    props: {
+        storeId: {
+            type: Number,
+            required: false
+        }
+    },
     mounted () {
-        // this.fetchInventorys();
     },
     components: {
         CreateInventoryModal,
         EditInventoryModal
     },
     computed: {
-        ...mapState(useCounterStore, ['inventories', 'message', 'error']),
+        ...mapState(useCounterStore, ['message', 'error', 'inventories']),
     },
     methods: {
         ...mapActions(useCounterStore, ['addInventory','fetchInventories', 'removeInventory']),
@@ -146,6 +152,10 @@ export default {
             this.selectedInventory = { ...inventory };
             this.editModal = true;
         },
+        filterInventories(storeId) {
+            this.filteredInventories = this.inventories.filter(i => i.store_id === storeId);
+        },
+
         openCreateInventory() {
             this.isModalOpen = true;
         },
@@ -180,7 +190,23 @@ export default {
             this.isModalOpen = false;
             this.editModal = false;
         }
+    },
+ watch: {
+    storeId: {
+      immediate: true,
+      handler(newVal) {
+        this.filterInventories(newVal);
+      }
+    },
+
+    inventories: {
+      deep: true,
+      handler() {
+        this.filterInventories(this.storeId);
+      }
     }
+  },
+
 
 }
 </script>

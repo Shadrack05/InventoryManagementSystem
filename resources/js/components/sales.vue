@@ -32,7 +32,7 @@
               class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
             >
               <tr class="text-gray-700 dark:text-gray-400"
-              v-for="sale in sales" :key="sale.id">
+              v-for="sale in filteredSales" :key="sale.id">
                 <td class="px-4 py-3">
                   <div class="flex items-center text-sm">
                     <div>
@@ -125,9 +125,14 @@ export default {
             isModalOpen: false,
             selectedSale: {},
             editModal: false,
-            alertMessage:'',
-            alertType: ''
+            filteredSales: [],
         };
+    },
+    props: {
+        storeId: {
+            type: Number,
+            required: false
+        }
     },
     mounted () {
         // this.fetchSales();
@@ -137,7 +142,7 @@ export default {
         EditSaleModal
     },
     computed: {
-        ...mapState(useCounterStore, ['sales', 'message', 'error']),
+        ...mapState(useCounterStore, ['message', 'error', 'sales']),
     },
     methods: {
         ...mapActions(useCounterStore, ['addSale','fetchSales', 'removeSale']),
@@ -151,6 +156,9 @@ export default {
         },
         editSale() {
             this.fetchSales();
+        },
+        filterSales(storeId) {
+            this.filteredSales = this.sales.filter(i => i.store_id === storeId);
         },
         async deleteSale(sale) {
             Swal.fire({
@@ -180,7 +188,22 @@ export default {
             this.isModalOpen = false;
             this.editModal = false;
         }
-    }
+    },
+    watch: {
+        storeId: {
+            immediate: true,
+            handler(newVal) {
+                this.filterSales(newVal);
+            }
+        },
+
+        sales: {
+            deep: true,
+            handler() {
+                this.filterSales(this.storeId);
+            }
+        }
+    },
 
 }
 </script>
