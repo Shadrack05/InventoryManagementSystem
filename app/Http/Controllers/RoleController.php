@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\RoleRequest;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -14,7 +15,7 @@ class RoleController extends Controller
         return response()->json($Roles);
     }
 
-    public function create(Request $request) {
+    public function create(RoleRequest $request) {
         try {
             Role::create([
                 'name' => $request->name,

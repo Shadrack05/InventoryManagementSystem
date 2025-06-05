@@ -7,6 +7,7 @@ use App\Models\Store;
 use App\Models\Transfer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\TransferRequest;
 
 class TransferController extends Controller
 {
@@ -18,7 +19,7 @@ class TransferController extends Controller
         return response()->json($transfers);
     }
 
-    public function create(Request $request) {
+    public function create(TransferRequest $request) {
         try {
             DB::beginTransaction();
 
@@ -79,7 +80,7 @@ class TransferController extends Controller
         }
     }
 
-    public function update(Request $request, $id) {
+    public function update(TransferRequest $request, $id) {
         try {
             DB::beginTransaction();
 

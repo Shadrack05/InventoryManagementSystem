@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SaleRequest;
 use App\Models\Sale;
 use App\Models\Stock;
 use App\Models\Store;
@@ -18,7 +19,7 @@ class SaleController extends Controller
         return response()->json($sales);
     }
 
-    public function create(Request $request) {
+    public function create(SaleRequest $request) {
         try {
             DB::beginTransaction();
 
@@ -68,7 +69,7 @@ class SaleController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(SaleRequest $request, $id)
     {
         try {
             DB::beginTransaction();

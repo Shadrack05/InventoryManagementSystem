@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Stock;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use App\Http\Requests\StockRequest;
 
 class StockController extends Controller
 {
@@ -16,23 +17,40 @@ class StockController extends Controller
         return response()->json($stocks);
     }
 
-    public function create(Request $request) {
+    public function create(StockRequest $request)
+    {
         try {
-
-            Stock::create([
+            $stock = Stock::where([
                 'product_id' => $request->productId,
-                'quantity' => $request->quantity,
-                'price' => $request->price,
                 'store_id' => $request->storeId,
-            ]);
+            ])->first();
 
-            return response()->json(['success' => 'Stock created successfully.'], 200);
+            if ($stock) {
+                // Update existing stock by adding quantities
+                $stock->update([
+                    'quantity' => $stock->quantity + $request->quantity,
+                    'price' => $request->price,
+                ]);
+            } else {
+                // Create new stock
+                $stock = Stock::create([
+                    'product_id' => $request->productId,
+                    'store_id' => $request->storeId,
+                    'quantity' => $request->quantity,
+                    'price' => $request->price,
+                ]);
+            }
+
+            return response()->json([
+                'success' => 'Stock updated successfully'], 200);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to create stock: ' . $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Failed to create/update stock: ' . $e->getMessage()
+            ], 500);
         }
     }
-    public function update(Request $request, $id) {
+    public function update(StockRequest $request, $id) {
         try {
             $stock = Stock::findOrFail($id);
 

@@ -4,20 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Products;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 
 class ProductsController extends Controller
 {
     //f
     public function index() {
-        // Fetch all products with their related branches
+        //
         $products = Products::all();
 
         return response()->json($products);
     }
 
-    public function create(Request $request) {
+    public function create(ProductRequest $request) {
         try {
-            $product = Products::create([
+            Products::create([
                 'name' => $request->name,
                 'sku' => strtoupper($request->sku),
                 'description' => $request->description,
@@ -30,7 +32,7 @@ class ProductsController extends Controller
         }
     }
 
-    public function update(Request $request, $id) {
+    public function update(UpdateProductRequest $request, $id) {
         try {
             $product = Products::findOrFail($id);
             $product->update([

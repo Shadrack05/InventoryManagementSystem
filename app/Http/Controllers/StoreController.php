@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use App\Http\Requests\StoreRequest;
+use App\Http\Requests\UpdateStoreRequest;
 
 class StoreController extends Controller
 {
@@ -15,7 +17,7 @@ class StoreController extends Controller
         return response()->json($givings);
     }
 
-    public function create(Request $request) {
+    public function create(StoreRequest $request) {
         try {
             $store = Store::create([
                 'name' => $request->name,
@@ -34,7 +36,7 @@ class StoreController extends Controller
         }
     }
 
-    public function update(Request $request, $id) {
+    public function update(UpdateStoreRequest $request, $id) {
         try {
             $store = Store::findOrFail($id);
             $store->update([

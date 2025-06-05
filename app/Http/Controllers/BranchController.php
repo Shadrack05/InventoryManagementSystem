@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BranchRequest;
+use App\Http\Requests\updateBranchRequest;
 use App\Models\Branch;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -15,7 +17,7 @@ class BranchController extends Controller
         return response()->json($branches);
     }
 
-    public function create(Request $request) {
+    public function create(BranchRequest $request) {
         try {
             $branch = Branch::create([
                 'name' => $request->name,
@@ -33,7 +35,7 @@ class BranchController extends Controller
 
     }
 
-    public function update(Request $request, $id) {
+    public function update(updateBranchRequest $request, $id) {
         try {
             $branch = Branch::findOrFail($id);
 
