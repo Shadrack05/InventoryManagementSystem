@@ -206,7 +206,7 @@
                 aria-label="submenu"
               >
             <li
-                v-for="branch in branches"
+                v-for="branch in filteredBranches"
                 :key="branch.id"
                 class="relative px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
               >
@@ -505,7 +505,7 @@
                 aria-label="submenu"
               >
                 <li
-                v-for="branch in branches"
+                v-for="branch in filteredBranches"
                 :key="branch.id"
                 class="relative px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
               >
@@ -852,6 +852,33 @@ export default {
     hasStoreRole() {
         return this.Roles.some(role => /^store\d+$/.test(role));
     },
+
+    filteredBranches() {
+        if (this.Roles.includes('admin')) {
+            return this.branches;
+        }
+        if (this.hasBranchRole) {
+            const branchRole = this.Roles.find(role => /^branch\d+$/.test(role));
+            const branchId = branchRole ? parseInt(branchRole.match(/\d+$/)[0]) : null;
+            return this.branches.filter(branch => branch.id === branchId);
+        }
+        if (this.hasStoreRole) {
+            const storeIds = this.Roles
+                .filter(role => /^store\d+$/.test(role))
+                .map(role => parseInt(role.match(/\d+$/)[0]));
+
+            // Step 2: From all stores, pick those where the ID is in the extracted list
+            const storeBranchIds = this.stores
+                .filter(store => storeIds.includes(store.id))
+                .map(store => store.branch_id);
+
+            // Step 3: Return branches that are in the storeBranchIds list
+            return this.branches.filter(branch => storeBranchIds.includes(branch.id));
+
+        }
+        return [];
+  }
+
 
   },
 
