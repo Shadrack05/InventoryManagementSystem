@@ -87,6 +87,19 @@ php artisan serve
 npm run dev
 ```
 
+**Important**: Access the application using `localhost:8000` instead of `127.0.0.1:8000` to ensure proper Sanctum authentication functionality.
+
+## Configuration Notes
+
+### Sanctum Setup
+- Use `localhost:8000` in your browser
+- Using `127.0.0.1:8000` may cause CSRF token mismatches and authentication issues
+- Ensure your `.env` file has:
+  ```
+  SANCTUM_STATEFUL_DOMAINS=localhost:8000
+  SESSION_DOMAIN=localhost
+  ```
+
 ## Usage
 
 ### User Roles
